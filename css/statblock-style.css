@@ -35,6 +35,11 @@
     margin-left: 1.5%;
 }
 
+.stat-block .stat_title {
+    font-weight: bold;
+}
+
+
 /* @media screen and (max-width: 675px) { */
 /* .stat-block.wide { */
 /* min-width: 280px; */

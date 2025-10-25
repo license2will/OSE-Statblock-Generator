@@ -13,10 +13,11 @@ body {
 .container {
     font-family: Georgia, Arial, sans-serif;
     text-align: left;
-    max-width: 1000px;
+    /* max-width: 1000px; */
     margin: 0 auto;
     line-height: 125%;
-    background-image: url('../dndimages/papyr.jpg');
+    /* background-image: url('../dndimages/papyr.jpg'); */
+    background-color: rgb(255, 255, 255);
     border-style: none;
 	min-height: 100%;
 }
@@ -146,7 +147,7 @@ label {
 .tooltip .tooltiptext {
     visibility: hidden;
     width: 400px;
-    background-image: url("../dndimages/paper.jpg");
+    /* background-image: url("../dndimages/paper.jpg"); */
     background-size: cover;
     background-position: center;
     color: #000000;
@@ -261,7 +262,7 @@ label {
 
 @media screen and (min-width: 1000px) {
     .container {
-        border-style: none solid;
+        /* border-style: none solid; */
     }
 
     #ref-body {

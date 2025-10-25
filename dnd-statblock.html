@@ -31,7 +31,8 @@
 
 <body id="stat-block-body" style="min-width: 1000px;">
     <div class="container" style="text-align: center;">
-        <div id="kofiheader" style="text-align: center;">
+        <!-- KOFI HEADER -->
+        <!-- <div id="kofiheader" style="text-align: center;">
             <br>
             <script src='https://ko-fi.com/widgets/widget_2.js'></script>
             <script>
@@ -45,15 +46,14 @@
                 }
             </script>
             <br>
-        </div>
+        </div> -->
         <div class="content">
-            <div style="text-align: center;"><a href="dnd-reference.html">PC Options Reference</a> - <a
+            <!-- <div style="text-align: center;"><a href="dnd-reference.html">PC Options Reference</a> - <a
                     href="dnd-char-gen.html">Character Generator</a> - <a href="dnd-magic-items.html">Magic Item
-                    Generator</a> - <b>Statblock Generator</b></div>
+                    Generator</a> - <b>Statblock Generator</b></div> -->
             <br>
-            <h1>D&amp;D 5e Statblock Generator</h1>
-            <p>Based on <a href="http://valloric.github.io/statblock5e/">Statblock5e</a> and <a
-                    href="https://open5e.com/">Open5e</a></p>
+            <h1>OSE Statblock Generator</h1>
+            <p>Based on <a href="https://tetra-cube.com/dnd/dnd-statblock.html">Tetra-Cube's 5e Statblock Generator</a></p>
             <br>
             <button onclick="TrySaveFile()">Save Statblock</button>
             <button onclick="LoadFilePrompt()">Load Statblock</button>
@@ -73,92 +73,340 @@
             <div id="stat-block-wrapper">
                 <div id="stat-block" class="stat-block">
                     <hr class="orange-border" />
-                    <div class="section-left">
+                    <div class="section">
                         <div class="creature-heading">
-                            <h1 id="monster-name">Monster</h1>
-                            <h2 id="monster-type">Size, type, alignment</h2>
+                            <h1 class="monster_name">Monster</h1>
                         </div> <!-- creature heading -->
-                        <svg height="5" width="100%" class="tapered-rule">
-                            <polyline points="0,0 400,2.5 0,5"></polyline>
-                        </svg>
-                        <div class="top-stats">
-                            <div class="property-line first">
-                                <h4>Armor Class</h4>
-                                <p id="armor-class"></p>
-                            </div> <!-- property line -->
-                            <div class="property-line">
-                                <h4>Hit Points</h4>
-                                <p id="hit-points"></p>
-                            </div> <!-- property line -->
-                            <div class="property-line last">
-                                <h4>Speed</h4>
-                                <p id="speed"></p>
-                            </div> <!-- property line -->
-                            <svg height="5" width="100%" class="tapered-rule">
-                                <polyline points="0,0 400,2.5 0,5"></polyline>
-                            </svg>
-                            <div class="scores">
-                                <div class="scores-strength">
-                                    <h4>STR</h4>
-                                    <p id="strpts"></p>
-                                </div> <!-- scores strength -->
-                                <div class="scores-dexterity">
-                                    <h4>DEX</h4>
-                                    <p id="dexpts"></p>
-                                </div> <!-- scores dexterity -->
-                                <div class="scores-constitution">
-                                    <h4>CON</h4>
-                                    <p id="conpts"></p>
-                                </div> <!-- scores constitution -->
-                                <div class="scores-intelligence">
-                                    <h4>INT</h4>
-                                    <p id="intpts"></p>
-                                </div> <!-- scores intelligence -->
-                                <div class="scores-wisdom">
-                                    <h4>WIS</h4>
-                                    <p id="wispts"></p>
-                                </div> <!-- scores wisdom -->
-                                <div class="scores-charisma">
-                                    <h4>CHA</h4>
-                                    <p id="chapts"></p>
-                                </div> <!-- scores charisma -->
-                            </div> <!-- scores -->
-                            <svg height="5" width="100%" class="tapered-rule">
-                                <polyline points="0,0 400,2.5 0,5"></polyline>
-                            </svg>
-                            <div id="properties-list"></div>
-                            <div id="challenge-rating-line" class="property-line last">
-                                <h4>Challenge</h4>
-                                <p id="challenge-rating"></p>
-                            </div> <!-- property line -->
-                        </div> <!-- top stats -->
-                        <svg height="5" width="100%" class="tapered-rule">
-                            <polyline points="0,0 400,2.5 0,5"></polyline>
-                        </svg>
-                        <div class="actions">
-                            <div id="traits-list-left"></div>
-                        </div> <!-- actions -->
-                    </div> <!-- section left -->
-                    <div class="section-right">
-                        <div class="actions">
-                            <div id="traits-list-right"></div>
-                        </div> <!-- actions -->
-                    </div> <!-- section right -->
+
+                        <div class="description">A monster.</div>
+                            
+                        <hr>
+
+                        <!-- stats -->
+                        <div class="stats">
+                            <span class="stat_title ac_title">AC</span> <span class="desc_ac">7</span> [<span class="asc_ac">12</span>],
+                            <span class="stat_title hit_dice_title">HD</span> <span class="hit_dice">2</span> (<span class="hit_points">9hp</span>),
+                            <span class="stat_title attacks_title">Att</span> <span class="attacks_list">1 x bite (1)</span>,
+                            <span class="stat_title thac0_title">THAC0</span> <span class="thac0">18</span> [<span class="asc_ab">+1</span>],
+                            <span class="stat_title speed_title">MV</span> <span class="speed_wrapper"><span class="round_speed">150</span>' (<span class="turn_speed">50</span>')</span>,
+                            <span class="stat_title saves_title">SV</span> <span class="saves">
+                                <span class="death_save">D12</span>
+                                <span class="wands_save">W12</span>
+                                <span class="paralysis_save">P12</span>
+                                <span class="breath_save">B12</span>
+                                <span class="spells_save">S12</span>
+                                <span class="saves_as">(1)</span>
+                            </span>,
+                            <span class="stat_title morale_title">ML</span> <span class="morale">7</span>,
+                            <span class="stat_title alignment_title">AL</span> <span class="alignment">Neutral</span>,
+                            <span class="stat_title xp_title">XP</span> <span class="xp">20</span>,
+                            <span class="stat_title number_appearing_title">NA</span> <span class="number_appearing">0 (2d4)</span>,
+                            <span class="stat_title treature_type_title">TT</span> <span class="treasure_type">None</span>
+                        </div>
+
+                        <hr>
+
+                        <!-- abilities -->
+                         <div class="abilities_list">
+                            <ul>
+                                <li><span class="ability_title">Ill-tempered:</span> <span class="ability_text">Bite or kick creatures in their way, including owners.</span></li>
+                            </ul>
+                         </div>
+
+
+                    </div>
                     <hr class="orange-border bottom" />
                 </div>
             </div> <!-- stat block -->
 
+            <!-- form -->
             <div class="options">
-                <form>
+                <!-- update button -->
+                <button id="update-button" type="button" onclick="UpdateBlockFromVariables(0)">Update Statblock</button>
+                <br>
+
+                <!-- name -->
+                <label id="name-label" for="name-input"><b>Name:</b><input id="name-input" type="text" value="Monster"></label>
+                <br>
+
+                <!-- description – long text format which supports markdown -->
+                <b style="margin-top: 1rem;">Description:</b>
+                <div class="abilities_descr"><textarea id="abilities_descr_input" style="height: 10em;"></textarea></div>
+
+                <hr>
+
+                <!-- stats: -->
+                <b> Stats: </b>
+                <!-- choose ascending ac -->
+                <form class="armor_choice_form">
+                    <label for="asc_armor_choice_input">
+                        <input id="asc_armor_choice_input" value="asc"
+                            type="radio" name="armor_choice-input" onchange="FormFunctions.ChangeAC()">
+                        Ascending AC</label>
+                    <label for="desc_armor_choice_input">
+                        <input id="desc_armor_choice_input" value="desc"
+                            type="radio" name="armor_choice-input" onchange="FormFunctions.ChangeAC()">
+                        Descending AC</label>
+                    <label for="both_armor_choice_input">
+                        <input id="both_armor_choice_input" value="both"
+                            type="radio" name="armor_choice-input" onchange="FormFunctions.ChangeAC()" checked>
+                        Both</label>
+                </form>
+                
+                <div class="form">
+                    <table id="stats-form">
+                        <tr>
+                            <!-- armor class -->
+                            <td>
+                                <div id="asc_ac_input_prompt" class="ac_prompt"><label for="asc_ac_input">
+                                    AC (Asc):<br>
+                                    <input type="number" id="asc_ac_input" min="-99" max="99" value="7">
+                                </label></div>
+                                <div id="desc_ac_input_prompt" class="ac_prompt"><label for="desc_ac_input">
+                                    AC (Desc):<br>
+                                    <input type="number" id="desc_ac_input" min="-99" max="99" value="12">
+                                </label></div>
+                            </td>
+
+                            <!-- hit dice -->
+                            <td>
+                                <label for="hit_dice_input">
+                                    Hit Dice: <br>
+                                    <input type="number" id="hit_dice_input" min="0" max="99" value="1">
+                                </label>
+                            </td>
+
+                            <!-- attacks place holder -->
+                            <td>
+                                <br>Attacks <a>(below)</a>
+                            </td>
+
+                            <!-- thac0 -->
+                            <td>
+                                <div><label for="thac0_input">
+                                    THAC0: <br>
+                                    <input type="number" id="thac0_input" min="-20" max="99" value="18">
+                                </label></div>
+                            </td>
+
+                            <!-- movement speed -->
+                            <td>
+                                <div><label for="speed_input">
+                                    Speed: <br>
+                                    <input type="number" id="speed_input" min="0" max="1000" value="40">
+                                </label></div>
+                            </td>
+
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- saves form -->
+                <div class="form">
+                    <b>Saves:</b>
+                    <table id="saves_form">
+                        <tr>
+                            <td>
+                                <label for="death_input">DEATH: <br>
+                                    <input type="number" id="death_input" min="1" max="99"
+                                        value="12" onchange="">
+                                </label>
+                            </td>
+                            <td>
+                                <label for="wands_input">WANDS: <br>
+                                    <input type="number" id="wands_input" min="1" max="99"
+                                        value="12" onchange="">
+                                </label>
+                            </td>
+                            <td>
+                                <label for="paralysis_input">PARALYSIS: <br>
+                                    <input type="number" id="paralysis_input" min="1" max="99"
+                                        value="12" onchange="">
+                                </label>
+                            </td>
+                            <td>
+                                <label for="breath_input">BREATH: <br>
+                                    <input type="number" id="breath_input" min="1" max="99"
+                                        value="12" onchange="">
+                                </label>
+                            </td>
+                            <td>
+                                <label for="spells_input">SPELLS: <br>
+                                    <input type="number" id="spells_input" min="1" max="99"
+                                        value="12" onchange="">
+                                </label>
+                            </td>
+                            <td>
+                                <label for="saves_as_input">Save as: <br>
+                                    <select id="saves_as_input">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                    </select>  
+                                </label>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- alignment etc. -->
+                <div class="form">
+                    <table>
+                        <tr>
+                            <td>
+                                <label for="morale_input">
+                                    Morale:<br>
+                                    <input type="number" id="morale_input" value="7">
+                                </label>
+                            </td>
+                            <td>
+                                <label for="alignment_input">
+                                    Alignment: <br>
+                                    <select name="alignment_select" id="alignment_select">
+                                        <option value="ce">Chaotic</option>
+                                        <option value="ce">Neutral</option>
+                                        <option value="ce">Good</option>
+                                        <option value="ne">Neutral Evil</option>
+                                        <option value="le">Lawful Evil</option>
+                                        <option value="cn">Chaotic Neutral</option>
+                                        <option value="tn">True Neutral</option>
+                                        <option value="ln">Lawful Neutral</option>
+                                        <option value="cg">Chaotic Good</option>
+                                        <option value="ng">Neutral Good</option>
+                                        <option value="lg">Lawful Good</option>
+                                    </select>
+                                </label>
+                                <br>
+                                <label for="custom_alignment_input" class="box-note">
+                                    (Custom alignment: 
+                                    <input type="checkbox" id="custom_alignment_input">)
+                                </label>
+                            </td>
+
+                            <!-- xp -->
+                            <td>
+                                <label for="xp_input">
+                                    XP: <br>
+                                    <input type="number" id="xp_input" value="100">
+                                </label>
+                            </td>
+
+                            <!-- na -->
+                            <td>
+                                <label for="num_appearing_input">
+                                    Number Appearing: <br>
+                                    <input type="text" id="num_appearing_input" class="short_text_input" value="0 (2d4)">
+                                </label>
+                            </td>
+
+                            <!-- treasure type -->
+                            <td>
+                                <label for="treasure_type_input">
+                                    Treasure Type: <br>
+                                    <input type="text" id="treasure_type_input" class="short_text_input" value="T">
+                                </label>
+                            </td>
+
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <hr>
+
+                <!-- abilities and attacks -->
+                <div class="form" id="abilities_actions">
+                    <!-- attacks -->
+                    <div class="attacks_form">
+                        <div><b>Actions:</b></div>
+                        <div class="attack_list">
+                            <div class="attack_item">
+                                <div class="box-note">(Custom action: <input type="checkbox" id="custom_action_check"> )</div>
+                                <div>
+                                    <label for="atk_count_input">
+                                        Count:
+                                        <input style="margin-left: 0.5rem;" type="number" id="atk_count_input">
+                                    </label>
+                                </div>
+                                <div>
+                                    <label for="atk_name_input">
+                                        Attack:
+                                        <input style="margin-left: 0.5rem; width: 100px;" type="text" id="atk_name_input">
+                                    </label>
+                                </div>
+                                <div>
+                                    <label for="atk_dmg_input">
+                                        Damage:
+                                        <input style="margin-left: 0.5rem; width: 100px;" type="text" id="atk_dmg_input">
+                                    </label>
+                                </div>
+                                <div>
+                                    <label for="atk_custom_input">
+                                        Attack:
+                                        <input style="margin-left: 0.5rem; width: 300px;" type="text" id="atk_custom_input">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+
+                        <button type="button" id="add_action_button" onclick="InputFunctions.NewAttack()">Add Action</button>
+                    </div>
+
+                    <!-- abilities -->
+                    <div class="abilities_form">
+                        <b>Abilities:</b>
+                        <div><label for="abilities_name_input" style="width: 100%;">
+                            Name:
+                            <input id="abilities_name_input" type="text" value="" style="margin-left: 0.5rem; width: 30%;">
+                        </label></div>
+                        <div><textarea id="abilities_descr_input" style="height: 10em;"></textarea></div>
+
+                        <!-- abilities button -->
+                        <div>
+                            <button type="button" id="add_ability_button"
+                                onclick="InputFunctions.AddAbilityInput('abilities')">Add Ability</button>
+                        </div>
+                    </div>
+                </div>
+
+                    <!-- ac
+                        hd (level)
+                        attacks
+                        attack bonus (THAC0 or ascending) - autocomplete
+                        movement speed
+                        saves
+                        morale
+                        alignment
+                        xp
+                        number appearing
+                        treasure table
+                        abilities –
+                            - unordered list of abilities
+            -->
+
+            
+
+
+                <!-- columns -->
+                <!-- <form> 
                     <label for="1col-input"><input id="1col-input" type="radio" name="columns-input" value="1col"
                             checked> One Column</label>
                     <label for="2col-input" style="margin-left: .5rem;"><input id="2col-input" type="radio"
                             name="columns-input" value="2col"> Two Columns</label>
                 </form>
                 <button id="left-separator-button" type="button" onclick="UpdateBlockFromVariables(1)">&lt;&lt;</button>
-                <button type="button" onclick="UpdateBlockFromVariables(0)">Update Statblock</button>
-                <button id="right-separator-button" type="button" onclick="UpdateBlockFromVariables(-1)">>></button>
+                <button id="right-separator-button" type="button" onclick="UpdateBlockFromVariables(-1)">>></button> -->
+
                 <hr>
+
                 <table id="type-form">
                     <tr>
                         <td>
@@ -209,7 +457,9 @@
                         </td>
                     </tr>
                 </table>
+
                 <hr>
+
                 <table id="armor-hitdice-form">
                     <tr>
                         <td></td>
