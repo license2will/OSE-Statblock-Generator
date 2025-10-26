@@ -82,7 +82,7 @@ class AbilityList {
     }
 }
 
-const mon2 = {
+let mon2 = {
     name: "Monster2", 
     description: "A monster.",
     ac_type: "desc",
@@ -108,7 +108,8 @@ const mon2 = {
     xP: 20,
     numberAppearing: "0 (2d4)",
     treasureType: "None",
-    abilities: new AbilityList()
+    abilities: new AbilityList(),
+    abilities2: new AbilityList()
 }
 
 // dice interpretation
@@ -186,7 +187,36 @@ var FormFunctions = {
 
     // Set the forms
     SetForms: function () {
+        // Name and type
+        $("#name-input").val(mon2.name);
+        $("#monster_descr_input").val(mon2.description);
+        
+        // AC
+        $("#asc_ac_input").val(mon2.asc_ac);
+        $("#desc_ac_input").val(mon2.desc_ac);
+        $("#" + mon2.ac_type + "_armor_choice_input").checked = true;
         this.ShowHideAscendAC();
+
+        // Stats
+        $("#hit_dice_input").val(mon2.hit_dice);
+        $("#thac0_input").val(mon2.thac0);
+        $("#attacks_input").val(mon2.attacks);
+        $("#speed_input").val(mon2.speed);
+
+        // Saves
+        $("#death_input").val(mon2.saves.death);
+        $("#wands_input").val(mon2.saves.wands);
+        $("#paralysis_input").val(mon2.saves.paralysis);
+        $("#breath_input").val(mon2.saves.breath);
+        $("#spells_input").val(mon2.saves.spells);
+        $("#saves_as_input").val(mon2.saves.saves_as);
+
+        // remaining stats
+        $("#morale_input").val(mon2.morale);
+        $("#alignment_select").val(mon2.alignment);
+        $("#xp_input").val(mon2.xP);
+        $("#num_appearing_input").val(mon2.numberAppearing);
+        $("#treasure_type_input").val(mon2.treasureType);
     },
 
     // Initialize Forms
@@ -367,6 +397,42 @@ var GetVariablesFunctions = {
     }
 }
 
+// Functions for saving/loading data
+var SavedData = {
+    // Saving
+
+    SaveToLocalStorage: () => localStorage.setItem("SavedData", JSON.stringify(mon2)),
+
+    SaveToFile: () => saveAs(new Blob([JSON.stringify(mon2)], {
+        type: "text/plain;charset=utf-8"
+    }), mon2.name.toLowerCase() + ".json"),
+
+    // Retrieving
+
+    RetrieveFromLocalStorage: function () {
+        let savedData = localStorage.getItem("SavedData");
+        if (savedData != undefined) {
+            mon2 = JSON.parse(savedData);
+            mon2.abilities = Object.assign(new AbilityList(), mon2.abilities);
+            InputFunctions.UpdateAbilitiesList();
+        }
+    },
+
+    RetrieveFromFile: function () {
+        let file = $("#file-upload").prop("files")[0],
+            reader = new FileReader();
+
+        reader.onload = function (e) {
+            mon2 = JSON.parse(reader.result);
+            mon2.abilities = Object.assign(new AbilityList(), mon2.abilities);
+            InputFunctions.UpdateAbilitiesList();
+            Populate();
+        };
+
+        reader.readAsText(file);
+    },
+}
+
 function Populate() {
     console.log("hello");
     // FormFunctions.SetLegendaryDescriptionForm();
@@ -502,36 +568,7 @@ function UpdateBlockFromVariables_old(moveSeparationPoint) {
     UpdateStatblock(moveSeparationPoint);
 }
 
-// Functions for saving/loading data
-var SavedData = {
-    // Saving
 
-    SaveToLocalStorage: () => localStorage.setItem("SavedData", JSON.stringify(mon)),
-
-    SaveToFile: () => saves_as(new Blob([JSON.stringify(mon)], {
-        type: "text/plain;charset=utf-8"
-    }), mon.name.toLowerCase() + ".monster"),
-
-    // Retrieving
-
-    RetrieveFromLocalStorage: function () {
-        let savedData = localStorage.getItem("SavedData");
-        if (savedData != undefined)
-            mon = JSON.parse(savedData);
-    },
-
-    RetrieveFromFile: function () {
-        let file = $("#file-upload").prop("files")[0],
-            reader = new FileReader();
-
-        reader.onload = function (e) {
-            mon = JSON.parse(reader.result);
-            Populate();
-        };
-
-        reader.readAsText(file);
-    },
-}
 
 // Update the main stat block
 function UpdateStatblock_old(moveSeparationPoint) {

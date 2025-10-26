@@ -1,0 +1,51 @@
+{
+    "abilities": {
+        "ability_list": [
+            {
+                "description": "Bite or kick creatures in their way, including owners.",
+                "name": "Ill-tempered"
+            },
+            {
+                "description": "After drinking well, can survive 2 weeks without water.",
+                "name": "Water"
+            },
+            {
+                "description": "Move at full speed through broken lands and deserts.",
+                "name": "Desert travel"
+            },
+            {
+                "description": "Up to 3,000 coins unencumbered; up to 6,000 at half speed.",
+                "name": "Carry loads"
+            },
+            {
+                "description": "Are not possible, when mounted on a camel.",
+                "name": "Charge attacks"
+            }
+        ]
+    },
+    "ac_type": "both",
+    "alignment": "Neutral",
+    "asc_ac": 7,
+    "attack_bonus": 1,
+    "attacks": "1 x bite (1), 1 x hoof (1d4)",
+    "desc_ac": 7,
+    "description": "Irascible animals that are adapted to life in dry climates. Often used for transportation in deserts.",
+    "hit_dice": "2",
+    "hit_points": 9,
+    "morale": "7",
+    "name": "Camel",
+    "numberAppearing": "0 (2d4)",
+    "round_speed": 150,
+    "saves": {
+        "breath": "15",
+        "death": "12",
+        "paralysis": "14",
+        "saves_as": "1",
+        "spells": "16",
+        "wands": "13"
+    },
+    "speed": "50",
+    "thac0": "18",
+    "treasureType": "T",
+    "xP": "20"
+}
