@@ -13,7 +13,7 @@
 2. a few default monsters
 3. editing the stat names (eg changing the AC label)
 4. editing the AC within the stat block based on the selector
-5. changing the THAC0
+5. changing the THAC0 based on asc/desc armor class
 6. formatting the abilities and statblock overall
 7. formatting the abilities in the display list
 8. attacks better
@@ -23,3 +23,9 @@
 12. safer saving throw editing - being able to edit the name of the saving throw as well as the value independently
 13. edit in place abilities list
 14. delete abilities from ability display list when deleted from stat block
+
+
+features:
+- import markdown (through text box)
+- import OSE SRD format (through text box)
+- export markdown
