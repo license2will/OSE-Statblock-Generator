@@ -136,16 +136,18 @@ function UpdateStatblock() {
     $("#stat-block .hit_points").text(mon2.hit_points.toString() + "hp");
     $("#stat-block .attacks").html(StringFunctions.FormatString(mon2.attacks));
     $("#stat-block .thac0").text(mon2.thac0.toString());
-    $("#stat-block .asc_ab").text("");
+    if (mon2.attack_bonus >= 0) {
+        $("#stat-block .asc_ab").text("+" + mon2.attack_bonus.toString());
+    } else { $("#stat-block .asc_ab").text(mon2.attack_bonus.toString()); }
     $("#stat-block .round_speed").text(mon2.round_speed.toString());
     $("#stat-block .turn_speed").text(mon2.speed.toString());
     
     // saves
-    $("#stat-block .saves .death_save").text("D" + mon2.saves.death.toString());
-    $("#stat-block .saves .wands_save").text("W" + mon2.saves.wands.toString());
-    $("#stat-block .saves .paralysis_save").text("P" + mon2.saves.paralysis.toString());
-    $("#stat-block .saves .breath_save").text("B" + mon2.saves.breath.toString());
-    $("#stat-block .saves .spells_save").text("S" + mon2.saves.spells.toString());
+    $("#stat-block .saves .death_save").text(mon2.saves.death);
+    $("#stat-block .saves .wands_save").text(mon2.saves.wands);
+    $("#stat-block .saves .paralysis_save").text(mon2.saves.paralysis);
+    $("#stat-block .saves .breath_save").text(mon2.saves.breath);
+    $("#stat-block .saves .spells_save").text(mon2.saves.spells);
     $("#stat-block .saves .saves_as").text("(" + mon2.saves.saves_as.toString() + ")");
     
     // remaining stats
@@ -164,11 +166,13 @@ function UpdateStatblock() {
 var FormFunctions = {
     // Change from Ascending to Descending AC, or vice versa
     ChangeAC: function() {
+        const old_ac = mon2.ac_type;
         GetVariablesFunctions.GetAC();
-        const new_ac = GetVariablesFunctions.CalcAC();
-        if (mon2.ac_type == "asc") { $('#asc_ac_input').val(new_ac); }
-        else { $('#desc_ac_input').val(new_ac); }
+        GetVariablesFunctions.CalcAC(old_ac);
+        $('#asc_ac_input').val(mon2.asc_ac);
+        $('#desc_ac_input').val(mon2.desc_ac);
         this.ShowHideAscendAC();
+        UpdateBlockFromVariables();
     },
 
     // Show or hide between Ascending, Descending or Both AC
@@ -194,7 +198,7 @@ var FormFunctions = {
         // AC
         $("#asc_ac_input").val(mon2.asc_ac);
         $("#desc_ac_input").val(mon2.desc_ac);
-        $("#" + mon2.ac_type + "_armor_choice_input").checked = true;
+        $("#" + mon2.ac_type + "_armor_choice_input").prop('checked', true);
         this.ShowHideAscendAC();
 
         // Stats
@@ -204,11 +208,11 @@ var FormFunctions = {
         $("#speed_input").val(mon2.speed);
 
         // Saves
-        $("#death_input").val(mon2.saves.death);
-        $("#wands_input").val(mon2.saves.wands);
-        $("#paralysis_input").val(mon2.saves.paralysis);
-        $("#breath_input").val(mon2.saves.breath);
-        $("#spells_input").val(mon2.saves.spells);
+        $("#death_input").val(mon2.saves.death.slice(1));
+        $("#wands_input").val(mon2.saves.wands.slice(1));
+        $("#paralysis_input").val(mon2.saves.paralysis.slice(1));
+        $("#breath_input").val(mon2.saves.breath.slice(1));
+        $("#spells_input").val(mon2.saves.spells.slice(1));
         $("#saves_as_input").val(mon2.saves.saves_as);
 
         // remaining stats
@@ -349,21 +353,23 @@ var GetVariablesFunctions = {
 
         // Armor Class
         GetVariablesFunctions.GetAC();
+        this.CalcAC(mon2.ac_type);
 
         // Stats
         mon2.hit_dice = $("#hit_dice_input").val().trim();
         mon2.hit_points = Math.floor(mon2.hit_dice * 4.5);
         mon2.thac0 = $("#thac0_input").val().trim();
+        mon2.attack_bonus = 19 - mon2.thac0;
         mon2.attacks = $("#attacks_input").val().trim();
         mon2.speed = $("#speed_input").val().trim();
         this.CalcSpeed();
 
         // Saves
-        mon2.saves.death = $("#death_input").val().trim();
-        mon2.saves.wands = $("#wands_input").val().trim();
-        mon2.saves.paralysis = $("#paralysis_input").val().trim();
-        mon2.saves.breath = $("#breath_input").val().trim();
-        mon2.saves.spells = $("#spells_input").val().trim();
+        mon2.saves.death = "D" + $("#death_input").val().trim();
+        mon2.saves.wands = "W" + $("#wands_input").val().trim();
+        mon2.saves.paralysis = "P" + $("#paralysis_input").val().trim();
+        mon2.saves.breath = "B" + $("#breath_input").val().trim();
+        mon2.saves.spells = "S" + $("#spells_input").val().trim();
         mon2.saves.saves_as = $("#saves_as_input").val().trim();
 
         // remaining stats
@@ -374,6 +380,50 @@ var GetVariablesFunctions = {
         mon2.treasureType = $("#treasure_type_input").val().trim();
     },
 
+    // Get all Variables From Block
+    GetVariablesFromBlock: function () {
+        // Name and Description
+        mon2.name = $(".monster_name").text().trim();
+        mon2.description = $(".description").text().trim();
+
+        // Armor Class
+        mon2.desc_ac = parseInt($(".desc_ac").text().trim());
+        mon2.asc_ac = parseInt($(".asc_ac").text().trim());
+
+        // Stats
+        mon2.hit_dice = parseInt($(".hit_dice").text().trim());
+        mon2.hit_points = Math.floor(mon2.hit_dice * 4.5);
+        mon2.attacks = $(".attacks").text().trim();
+        mon2.thac0 = parseInt($(".thac0").text().trim());
+        mon2.attack_bonus = 19 - mon2.thac0;
+        mon2.speed = parseInt($(".turn_speed").text().trim());
+        this.CalcSpeed();
+
+        // Saves
+        mon2.saves.death = $(".death_save").text().trim()
+        mon2.saves.wands = $(".wands_save").text().trim()
+        mon2.saves.paralysis = $(".paralysis_save").text().trim()
+        mon2.saves.breath = $(".breath_save").text().trim()
+        mon2.saves.spells = $(".spells_save").text().trim()
+        mon2.saves.saves_as = $(".saves_as").text().trim()[1];
+
+        // remaining stats
+        mon2.morale = $(".morale").text().trim();
+        mon2.alignment = $(".alignment").text().trim();
+        mon2.xP = $(".xp").text().trim();
+        mon2.numberAppearing = $(".number_appearing").text().trim();
+        mon2.treasureType = $(".treasure_type").text().trim();
+
+        // abilities
+        mon2.abilities = new AbilityList();
+        $(".abilities_list ul").children().each(function (index) {
+            let [name, description] = [$(this).find(".ability_title").text(), $(this).find(".ability_text").text()];
+            if (name.trim().slice(-1) == ":") name = name.trim().slice(0, -1);
+            console.log(name);
+            mon2.abilities.addAbility(name.trim(), description.trim());
+        });
+    },
+
     GetAC: function() {
         mon2.ac_type = $('input[name="armor_choice-input"]:checked').val().trim();
         mon2.asc_ac = parseInt($("#asc_ac_input").val().trim());
@@ -381,13 +431,13 @@ var GetVariablesFunctions = {
     },
 
     // Calculate Ascending/Descending AC
-    CalcAC: function() {
-        const old_ac = (mon2.ac_type == "desc") || (mon2.ac_type == "both") ? mon2.asc_ac : mon2.desc_ac;
+    CalcAC: function(base_type) {
+        const old_ac = (base_type == "asc") ? mon2.asc_ac : mon2.desc_ac;
         const new_ac = (19 - old_ac);
-        if (mon2.ac_type == "asc") {
-            mon2.asc_ac = new_ac;
-        } else {
+        if (base_type == "asc") {
             mon2.desc_ac = new_ac;
+        } else {
+            mon2.asc_ac = new_ac;
         }
         return new_ac;
     },
@@ -448,6 +498,54 @@ function Populate() {
     FormFunctions.SetForms();
     UpdateStatblock();
 }
+
+// Document ready function
+$(function () {
+    // Load the preset monster names
+    // $.getJSON("https://api.open5e.com/monsters/?format=json&fields=slug,name&limit=1000&document__slug=wotc-srd", function (srdArr) {
+    //     let monsterSelect = $("#monster-select");
+    //     monsterSelect.append("<option value=''></option>");
+    //     monsterSelect.append("<option value=''>-5e SRD-</option>");
+    //     $.each(srdArr.results, function (index, value) {
+    //         monsterSelect.append("<option value='" + value.slug + "'>" + value.name + "</option>");
+    //     })
+    //     $.getJSON("https://api.open5e.com/monsters/?format=json&fields=slug,name&limit=1000&document__slug=tob", function (tobArr) {
+    //         monsterSelect.append("<option value=''></option>");
+    //         monsterSelect.append("<option value=''>-Tome of Beasts (Kobold Press)-</option>");
+    //         $.each(tobArr.results, function (index, value) {
+    //             monsterSelect.append("<option value='" + value.slug + "'>" + value.name + "</option>");
+    //         })
+    //     })
+    //         .fail(function () {
+    //             $("#monster-select-form").html("Unable to load Tome of Beasts monster presets.")
+    //         });
+    // })
+    //     .fail(function () {
+    //         $("#monster-select-form").html("Unable to load monster presets.")
+    //     });
+
+    // Load the json data
+    // $.getJSON("js/JSON/statblockdata.json", function (json) {
+    //     data = json;
+
+    //     // Set the default monster in case there isn't one saved
+    //     // GetVariablesFunctions.SetPreset(data.defaultPreset);
+    //     // uncomment later
+
+    //     // Load saved data
+    //     SavedData.RetrieveFromLocalStorage();
+
+    //     Populate();
+    // });
+
+    SavedData.RetrieveFromLocalStorage();
+    Populate();
+
+    // FormFunctions.ShowHideFormatHelper();
+});
+
+
+
 
 
 
@@ -2398,44 +2496,44 @@ var ArrayFunctions = {
     }
 }
 
-// Document ready function
-$(function () {
-    // Load the preset monster names
-    $.getJSON("https://api.open5e.com/monsters/?format=json&fields=slug,name&limit=1000&document__slug=wotc-srd", function (srdArr) {
-        let monsterSelect = $("#monster-select");
-        monsterSelect.append("<option value=''></option>");
-        monsterSelect.append("<option value=''>-5e SRD-</option>");
-        $.each(srdArr.results, function (index, value) {
-            monsterSelect.append("<option value='" + value.slug + "'>" + value.name + "</option>");
-        })
-        $.getJSON("https://api.open5e.com/monsters/?format=json&fields=slug,name&limit=1000&document__slug=tob", function (tobArr) {
-            monsterSelect.append("<option value=''></option>");
-            monsterSelect.append("<option value=''>-Tome of Beasts (Kobold Press)-</option>");
-            $.each(tobArr.results, function (index, value) {
-                monsterSelect.append("<option value='" + value.slug + "'>" + value.name + "</option>");
-            })
-        })
-            .fail(function () {
-                $("#monster-select-form").html("Unable to load Tome of Beasts monster presets.")
-            });
-    })
-        .fail(function () {
-            $("#monster-select-form").html("Unable to load monster presets.")
-        });
+// // Document ready function
+// $(function () {
+//     // Load the preset monster names
+//     $.getJSON("https://api.open5e.com/monsters/?format=json&fields=slug,name&limit=1000&document__slug=wotc-srd", function (srdArr) {
+//         let monsterSelect = $("#monster-select");
+//         monsterSelect.append("<option value=''></option>");
+//         monsterSelect.append("<option value=''>-5e SRD-</option>");
+//         $.each(srdArr.results, function (index, value) {
+//             monsterSelect.append("<option value='" + value.slug + "'>" + value.name + "</option>");
+//         })
+//         $.getJSON("https://api.open5e.com/monsters/?format=json&fields=slug,name&limit=1000&document__slug=tob", function (tobArr) {
+//             monsterSelect.append("<option value=''></option>");
+//             monsterSelect.append("<option value=''>-Tome of Beasts (Kobold Press)-</option>");
+//             $.each(tobArr.results, function (index, value) {
+//                 monsterSelect.append("<option value='" + value.slug + "'>" + value.name + "</option>");
+//             })
+//         })
+//             .fail(function () {
+//                 $("#monster-select-form").html("Unable to load Tome of Beasts monster presets.")
+//             });
+//     })
+//         .fail(function () {
+//             $("#monster-select-form").html("Unable to load monster presets.")
+//         });
 
-    // Load the json data
-    $.getJSON("js/JSON/statblockdata.json", function (json) {
-        data = json;
+//     // Load the json data
+//     $.getJSON("js/JSON/statblockdata.json", function (json) {
+//         data = json;
 
-        // Set the default monster in case there isn't one saved
-        // GetVariablesFunctions.SetPreset(data.defaultPreset);
-        // uncomment later
+//         // Set the default monster in case there isn't one saved
+//         // GetVariablesFunctions.SetPreset(data.defaultPreset);
+//         // uncomment later
 
-        // Load saved data
-        SavedData.RetrieveFromLocalStorage();
+//         // Load saved data
+//         SavedData.RetrieveFromLocalStorage();
 
-        Populate();
-    });
+//         Populate();
+//     });
 
-    // FormFunctions.ShowHideFormatHelper();
-});
+//     // FormFunctions.ShowHideFormatHelper();
+// });

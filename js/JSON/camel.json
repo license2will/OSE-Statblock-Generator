@@ -25,7 +25,7 @@
     },
     "ac_type": "both",
     "alignment": "Neutral",
-    "asc_ac": 7,
+    "asc_ac": 12,
     "attack_bonus": 1,
     "attacks": "1 x bite (1), 1 x hoof (1d4)",
     "desc_ac": 7,
@@ -37,14 +37,14 @@
     "numberAppearing": "0 (2d4)",
     "round_speed": 150,
     "saves": {
-        "breath": "15",
-        "death": "12",
-        "paralysis": "14",
+        "breath": "B15",
+        "death": "D12",
+        "paralysis": "P14",
         "saves_as": "1",
-        "spells": "16",
-        "wands": "13"
+        "spells": "S16",
+        "wands": "W13"
     },
-    "speed": "50",
+    "speed": 50,
     "thac0": "18",
     "treasureType": "T",
     "xP": "20"
