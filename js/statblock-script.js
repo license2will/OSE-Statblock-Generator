@@ -1,5 +1,87 @@
 var data;
 
+class AbilityList {
+    constructor() {
+        this.ability_list = [];
+    }
+
+    addAbility(name, description, replace=false) {
+        name = name.trim();
+        description = description.trim();
+        if (replace) {
+            for (let i = 0; i < this.ability_list.length; i++) {
+                if (this.ability_list[i].name.toLowerCase() === name.toLowerCase()) {
+                    if (name == "") {
+                        if (this.ability_list[i].description == description) {
+                            // dont add the same entry twice
+                            return;
+                        }
+                        // don't replace entries without names but different descriptions
+                        continue;
+                    }
+
+                    // replace ability in list
+                    this.ability_list[i].name = name;
+                    this.ability_list[i].description = description;
+                    return;
+                }
+            }
+        }
+        this.ability_list.push({name: name, description: description});
+    }
+
+    toString() {
+        let result = "";
+        for (let i = 0; i < this.ability_list.length; i++) {
+            result += this.ability_list[i].name;
+            if (this.ability_list[i].description != "") {
+                result += ": " + this.ability_list[i].description;
+            }
+            result += "\n";
+        }
+        return result.trim();
+    }
+
+    sort() {
+        this.ability_list.sort((a, b) => {
+            if (!(a.name == "" || b.name == "")) {
+                const comp = a.name.localeCompare(b.name);
+                if (comp != 0) return comp;
+                return a.description.localeCompare(b.description);
+            }
+            if (a.name == b.name) {
+                return a.description.localeCompare(b.description);
+            }
+            // put empty names last
+            return a.name.localeCompare(b.name) * -1;
+        });
+    }
+
+    removeItem(name, descr = null) {
+        if (name == "" && descr != null) {
+            this.ability_list = this.ability_list.filter(ability => !(ability.name == "" && ability.description == descr));
+            return;
+        }
+        name = name.toLowerCase().trim();
+        if (descr != null) {
+            descr = descr.toLowerCase().trim();
+            this.ability_list = this.ability_list.filter(ability => !(ability.name == name && ability.description == descr));
+            return;
+        }
+        this.ability_list = this.ability_list.filter(ability => ability.name !== name);
+    }
+
+    removeIndex(index) {
+        if (index >= 0 && index < this.ability_list.length) {
+            this.ability_list.splice(index, 1);
+        }
+    }
+
+    insertItem(ability, index) {
+        this.ability_list.splice(index, 0, ability);
+    }
+}
+
 const mon2 = {
     name: "Monster2", 
     description: "A monster.",
@@ -25,7 +107,8 @@ const mon2 = {
     alignment: "Neutral",
     xP: 20,
     numberAppearing: "0 (2d4)",
-    treasureType: "None"
+    treasureType: "None",
+    abilities: new AbilityList()
 }
 
 // dice interpretation
@@ -50,7 +133,7 @@ function UpdateStatblock() {
     $("#stat-block .asc_ac").text(mon2.asc_ac.toString());
     $("#stat-block .hit_dice").text(mon2.hit_dice.toString());
     $("#stat-block .hit_points").text(mon2.hit_points.toString() + "hp");
-    $("#stat-block .attacks").text(mon2.attacks);
+    $("#stat-block .attacks").html(StringFunctions.FormatString(mon2.attacks));
     $("#stat-block .thac0").text(mon2.thac0.toString());
     $("#stat-block .asc_ab").text("");
     $("#stat-block .round_speed").text(mon2.round_speed.toString());
@@ -71,78 +154,9 @@ function UpdateStatblock() {
     $("#stat-block .number_appearing").text(mon2.numberAppearing.toString());
     $("#stat-block .treasure_type").text(mon2.treasureType.toString());
     
-    // display all attacks
-    // let attackDisplay = "";
-    // for (let i = 0; i < mon2.attack_list.length; i++) {
-    //     attackDisplay += mon2.attack_list[i].map((element) => { return element.ToString(); }).join(", ");
-    //     if (i != mon2.attack_list.length - 1) {attackDisplay += " or ";}
-    // }
-    // $("#stat-block .attacks_list").text(attackDisplay.toString());
-    
-    // // Display All Properties (except CR)
-    // let propertiesDisplayList = [];
-    // propertiesDisplayList.push(StringFunctions.MakePropertyHTML(propertiesDisplayArr[0], true));
-    // for (let index = 1; index < propertiesDisplayArr.length; index++)
-    //     propertiesDisplayList.push(StringFunctions.MakePropertyHTML(propertiesDisplayArr[index]));
-    // $("#properties-list").html(propertiesDisplayList.join(""));
-
-    // // Challenge Rating
-    // let crDisplay = CrFunctions.GetString();
-    // if (crDisplay && crDisplay.length > 0) {
-    //     $("#challenge-rating-line").show();
-    //     $("#challenge-rating").html(StringFunctions.FormatString(StringFunctions.RemoveHtmlTags(crDisplay)));
-    // }
-    // else
-    //     $("#challenge-rating-line").hide();
-
-    // // Abilities
-    // let traitsHTML = [];
-
-    // if (mon.abilities.length > 0) AddToTraitList(traitsHTML, mon.abilities);
-    // if (mon.actions.length > 0) AddToTraitList(traitsHTML, mon.actions, "<h3>Actions</h3>");
-    // if (mon.bonusActions.length > 0) AddToTraitList(traitsHTML, mon.bonusActions, "<h3>Bonus Actions</h3>");
-    // if (mon.reactions.length > 0) AddToTraitList(traitsHTML, mon.reactions, "<h3>Reactions</h3>");
-    // if (mon.isLegendary && (mon.legendaries.length > 0 || mon.legendariesDescription.length > 0))
-    //     AddToTraitList(traitsHTML, mon.legendaries, mon.legendariesDescription == "" ?
-    //         "<h3>Legendary Actions</h3><div class='property-block'></div>" :
-    //         ["<h3>Legendary Actions</h3><div class='property-block'>", StringFunctions.FormatString(ReplaceTags(StringFunctions.RemoveHtmlTags(mon.legendariesDescription))), "</div></br>"], true);
-    // if (mon.isMythic && mon.isLegendary && (mon.mythics.length > 0 || mon.mythicDescription.length > 0))
-    //     AddToTraitList(traitsHTML, mon.mythics, mon.mythicDescription == "" ?
-    //         "<h3>Mythic Actions</h3><div class='property-block'></div>" :
-    //         ["<h3>Mythic Actions</h3><div class='property-block'>", StringFunctions.FormatString(ReplaceTags(StringFunctions.RemoveHtmlTags(mon.mythicDescription))), "</div></br>"], true);    
-    // if (mon.isLair && mon.isLegendary && (mon.lairs.length > 0 || mon.lairDescription.length > 0 || mon.lairDescriptionEnd.length > 0)) {
-    //     AddToTraitList(traitsHTML, mon.lairs, mon.lairDescription == "" ?
-    //         "<h3>Lair Actions</h3><div class='property-block'></div>" :
-    //         ["<h3>Lair Actions</h3><div class='property-block'>", StringFunctions.FormatString(ReplaceTags(StringFunctions.RemoveHtmlTags(mon.lairDescription))), "</div></br><ul>"], false, true);
-    //     traitsHTML.push("</ul>" + StringFunctions.FormatString(ReplaceTags(StringFunctions.RemoveHtmlTags(mon.lairDescriptionEnd))));
-    // }
-    // if (mon.isRegional && mon.isLegendary && (mon.regionals.length > 0 || mon.regionalDescription.length > 0 || mon.regionalDescriptionEnd.length > 0)) {
-    //     AddToTraitList(traitsHTML, mon.regionals, mon.regionalDescription == "" ?
-    //         "<h3>Regional Effects</h3><div class='property-block'></div>" :
-    //         ["<h3>Regional Effects</h3><div class='property-block'>", StringFunctions.FormatString(ReplaceTags(StringFunctions.RemoveHtmlTags(mon.regionalDescription))), "</div></br><ul>"], false, true);
-    //     traitsHTML.push("</ul>" + StringFunctions.FormatString(ReplaceTags(StringFunctions.RemoveHtmlTags(mon.regionalDescriptionEnd))));
-    // }
-
-    // // Add traits, taking into account the width of the block (one column or two columns)
-    // let leftTraitsArr = [],
-    //     rightTraitsArr = [],
-    //     separationCounter = 0;
-    // for (let index = 0; index < traitsHTML.length; index++) {
-    //     let trait = traitsHTML[index],
-    //         raiseCounter = true;
-    //     if (trait[0] == "*") {
-    //         raiseCounter = false;
-    //         trait = trait.substr(1);
-    //     }
-    //     (separationCounter < mon.separationPoint ? leftTraitsArr : rightTraitsArr).push(trait);
-    //     if (raiseCounter)
-    //         separationCounter++;
-    // }
-    // $("#traits-list-left").html(leftTraitsArr.join(""));
-    // $("#traits-list-right").html(rightTraitsArr.join(""));
-
-    // // Show or hide the separator input depending on how many columns there are
-    // FormFunctions.ShowHideSeparatorInput();
+    // display all abilites
+    const abilities_list = $("#stat-block .abilities_list ul");
+    InputFunctions.DisplayAbilitiesList(abilities_list);
 }
 
 // Functions for form-setting
@@ -189,6 +203,9 @@ var FormFunctions = {
         // $("#hit_dice_input").html(dropdownBuffer.join(""));
 
         // $(".hidden_on_load").hide()
+        if (mon2.abilities.ability_list.length == 0) {
+            $("#sort_abilities").hide();
+        }
     }
 }
 
@@ -199,15 +216,95 @@ var InputFunctions = {
         mon2.hit_dice = $("#hit_dice_input").val();
     },
 
-    NewAttack: function() {
-        // add action button
-        const attackList = document.querySelector(".attack_list");
-        const firstItem = attackList.querySelector('.attack_item');
-        const newItem = firstItem.cloneNode(true);
+    AddAbilityInput: function () {
+        const name_input = $("#abilities_name_input");
+        const descr_input = $("#abilities_descr_input");
 
-        newItem.querySelectorAll('input').forEach(input => input.value = '');
+        // add ability to mon2.abilities
+        const ability_name = name_input.val().trim();
+        const ability_descr = descr_input.val().trim();
+        mon2.abilities.addAbility(ability_name, ability_descr);
+        console.log(mon2.abilities.toString());
 
-        attackList.appendChild(newItem);
+        // clear the ability input fields
+        name_input.val("");
+        descr_input.val("");
+
+        // update the list of abilities shown
+        this.UpdateAbilitiesList(); // also updates stat block
+        if (mon2.abilities.ability_list.length > 0) $("#sort_abilities").show();
+    },
+
+    UpdateAbilitiesList: function() {
+        const displayList = $("#abilities_list_display");
+        InputFunctions.DisplayAbilitiesList(displayList, true);
+        UpdateStatblock();
+    },
+
+    DisplayAbilitiesList: function(displayList, img = false) {
+        let html = "";
+        mon2.abilities.ability_list.forEach((ability, index) => {
+            const name = ability.name;
+            const descr = ability.description;
+            html += "<li>";
+            if (img) html += this.AddEditButtons(index) + " ";
+            if (name != "") {
+                html += "<span class=\"ability_title\">";
+                html += StringFunctions.RemoveHtmlTags(name);
+                if (descr != "") { html += ":";}
+                html += "</span> ";
+            }
+            if (descr != "") {
+                html += "<span class=\"ability_text\">";
+                html += StringFunctions.FormatString(StringFunctions.RemoveHtmlTags(descr));
+                html += "</span>";
+            }
+            html += "</li>";    
+        });
+        displayList.html(html);
+    },
+
+    AddEditButtons: function(index) {
+        let imageHTML = "<img class='statblock-image' src='dndimages/x-icon.png' alt='Remove' title='Remove' onclick='InputFunctions.RemoveAbilityItem(" + index + ")'>";
+        imageHTML += " <img class='statblock-image' src='dndimages/edit-icon.png' alt='Edit' title='Edit' onclick='InputFunctions.EditAbilityItem(" + index + ")'>" +
+            " <img class='statblock-image' src='dndimages/copy-icon.png' alt='Copy' title='Copy' onclick='InputFunctions.CopyAbilityItem(" + index + ")'>" +
+            " <img class='statblock-image' src='dndimages/up-icon.png' alt='Up' title='Up' onclick='InputFunctions.SwapAbilityItem(" + index + ", -1)'>" +
+            " <img class='statblock-image' src='dndimages/down-icon.png' alt='Down' title='Down' onclick='InputFunctions.SwapAbilityItem(" + index + ", 1)'>";
+        return imageHTML;
+    },
+
+    RemoveAbilityItem: function(index) {
+        mon2.abilities.removeIndex(index);
+        this.UpdateAbilitiesList();
+        if (mon2.abilities.ability_list.length == 0) $("#sort_abilities").hide();
+    },
+
+    EditAbilityItem: function(index) {
+        const ability = mon2.abilities.ability_list[index];
+        $("#abilities_name_input").val(ability.name);
+        $("#abilities_descr_input").val(ability.description);
+        this.RemoveAbilityItem(index);
+    },
+
+    CopyAbilityItem: function(index) {
+        const ability = mon2.abilities.ability_list[index];
+        mon2.abilities.insertItem({name: ability.name, description: ability.description}, index + 1);
+        this.UpdateAbilitiesList();
+    },
+
+    SwapAbilityItem: function(index, direction) {
+        const arr = mon2.abilities.ability_list;
+        const new_index = index + direction;
+        if (new_index < 0 || new_index >= arr.length) return;
+        let old = arr[new_index];
+        arr[new_index] = arr[index];
+        arr[index] = old;
+        this.UpdateAbilitiesList();
+    },
+
+    SortAbilityList: function() {
+        mon2.abilities.sort();
+        this.UpdateAbilitiesList();
     }
 }
 
@@ -218,7 +315,7 @@ var GetVariablesFunctions = {
     GetAllVariables: function () {
         // Name and Description
         mon2.name = $("#name-input").val().trim();
-        mon2.description = $("#abilities_descr_input").val().trim();
+        mon2.description = $("#monster_descr_input").val().trim();
 
         // Armor Class
         GetVariablesFunctions.GetAC();
@@ -268,315 +365,6 @@ var GetVariablesFunctions = {
     CalcSpeed: function() {
         mon2.round_speed = mon2.speed * 3;
     }
-
-    // Get all variables from preset
-    // SetPreset: function (preset) {
-    //     // Name and type
-    //     mon.name = preset.name.trim();
-    //     mon.size = preset.size.trim().toLowerCase();
-    //     mon.type = preset.type.trim();
-    //     mon.tag = preset.subtype.trim();
-    //     mon.alignment = preset.alignment.trim();
-
-    //     // Stats
-    //     mon.strPoints = preset.strength;
-    //     mon.dexPoints = preset.dexterity;
-    //     mon.conPoints = preset.constitution;
-    //     mon.intPoints = preset.intelligence;
-    //     mon.wisPoints = preset.wisdom;
-    //     mon.chaPoints = preset.charisma;
-
-    //     // CR
-    //     mon.cr = preset.challenge_rating;
-    //     mon.customCr = CrFunctions.GetString();
-    //     mon.customProf = CrFunctions.GetProf();
-
-    //     // Armor Class
-    //     let armorAcData = preset.armor_class,
-    //         armorDescData = preset.armor_desc ? preset.armor_desc.split(",") : null;
-
-    //     // What type of armor do we have? If it doesn't match anything, use "other"
-    //     mon.shieldBonus = 0;
-    //     if (armorDescData) {
-    //         mon.armorName = armorDescData[0];
-    //         // If we have a shield and nothing else
-    //         if (armorDescData.length == 1 && armorDescData[0].trim() == "shield") {
-    //             mon.shieldBonus = 2;
-    //             mon.armorName = "none";
-    //         } else {
-    //             // If we have a shield in addition to something else
-    //             if (armorDescData.length > 1) {
-    //                 if (armorDescData[1].trim() == "shield") {
-    //                     mon.shieldBonus = 2;
-    //                     mon.armorName = armorDescData[0];
-    //                 }
-    //                 // Or if it's just weird
-    //                 else
-    //                     armorDescData = [armorDescData.join(",")];
-    //             }
-
-    //             // Is it natural armor?
-    //             if (mon.armorName == "natural armor") {
-    //                 let natArmorBonusCheck = armorAcData - MathFunctions.GetAC("none");
-    //                 if (natArmorBonusCheck > 0)
-    //                     mon.natArmorBonus = natArmorBonusCheck;
-
-    //                 // Weird edge case where the monster has a natural armor bonus of <= 0
-    //                 else
-    //                     mon.armorName = "other";
-    //             }
-
-    //             // Is it another type of armor we know?
-    //             else if (data.armors.hasOwnProperty(armorDescData[0].trim()))
-    //                 mon.armorName = armorDescData[0].trim();
-
-    //             // Is it mage armor?
-    //             else if (mon.armorName.includes("mage armor"))
-    //                 mon.armorName = "mage armor";
-
-    //             // We have no idea what this armor is
-    //             else
-    //                 mon.armorName = "other";
-    //         }
-    //     } else
-    //         mon.armorName = (armorAcData == MathFunctions.GetAC("none") ? "none" : "other");
-
-    //     // In case it's an unknown armor type
-    //     if (mon.armorName == "other") {
-    //         if (armorDescData)
-    //             mon.otherArmorDesc = armorDescData[0].includes("(") ? armorDescData :
-    //                 armorAcData + " (" + armorDescData + ")";
-    //         else
-    //             mon.otherArmorDesc = armorAcData + " (unknown armor type)";
-
-    //         // Set the nat armor bonus for convenience- often the AC is for natural armor, but doesn't have it in the armor description
-    //         let natArmorBonusCheck = armorAcData - MathFunctions.GetAC("none");
-
-    //         if (natArmorBonusCheck > 0)
-    //             mon.natArmorBonus = natArmorBonusCheck;
-    //     } else
-    //         mon.otherArmorDesc = armorAcData + (preset.armor_desc ? " (" + preset.armor_desc + ")" : "");
-
-    //     // Hit Dice
-    //     mon.hitDice = parseInt(preset.hit_dice.split("d")[0]);
-    //     mon.hpText = mon.hitDice.toString();
-    //     mon.customHP = false;
-
-    //     // Speeds
-    //     let GetSpeed = (speedList, speedType) => speedList.hasOwnProperty(speedType) ? parseInt(speedList[speedType]) : 0;
-
-    //     mon.speed = GetSpeed(preset.speed, "walk");
-    //     mon.burrowSpeed = GetSpeed(preset.speed, "burrow");
-    //     mon.climbSpeed = GetSpeed(preset.speed, "climb");
-    //     mon.flySpeed = GetSpeed(preset.speed, "fly");
-    //     mon.swimSpeed = GetSpeed(preset.speed, "swim");
-    //     mon.hover = preset.speed.hasOwnProperty("hover");
-
-    //     if (preset.speed.hasOwnProperty("notes")) {
-    //         mon.customSpeed = true;
-    //         mon.speedDesc = preset.speed.walk + " ft. (" + preset.speed.notes + ")";
-    //     } else {
-    //         mon.customSpeed = false;
-    //         mon.speedDesc = StringFunctions.GetSpeed();
-    //     }
-
-    //     // Saving Throws
-    //     mon.sthrows = [];
-    //     if (preset.strength_save)
-    //         this.AddSthrow("str");
-    //     if (preset.dexterity_save)
-    //         this.AddSthrow("dex");
-    //     if (preset.constitution_save)
-    //         this.AddSthrow("con");
-    //     if (preset.intelligence_save)
-    //         this.AddSthrow("int");
-    //     if (preset.wisdom_save)
-    //         this.AddSthrow("wis");
-    //     if (preset.charisma_save)
-    //         this.AddSthrow("cha");
-
-    //     // Skills
-    //     mon.skills = [];
-    //     if (preset.skills) {
-    //         for (let index = 0; index < data.allSkills.length; index++) {
-    //             let currentSkill = data.allSkills[index],
-    //                 skillCheck = StringFunctions.StringReplaceAll(currentSkill.name.toLowerCase(), " ", "_");
-    //             if (preset.skills[skillCheck]) {
-    //                 let expectedExpertise = MathFunctions.PointsToBonus(mon[currentSkill.stat + "Points"]) + Math.ceil(CrFunctions.GetProf() * 1.5),
-    //                     skillVal = preset.skills[skillCheck];
-    //                 this.AddSkill(data.allSkills[index].name, (skillVal >= expectedExpertise ? " (ex)" : null));
-    //             }
-    //         }
-    //     }
-
-    //     // Conditions
-    //     mon.conditions = [];
-    //     let conditionsPresetArr = ArrayFunctions.FixPresetArray(preset.condition_immunities);
-    //     for (let index = 0; index < conditionsPresetArr.length; index++)
-    //         this.AddCondition(conditionsPresetArr[index]);
-
-    //     // Damage Types
-    //     mon.damagetypes = [];
-    //     mon.specialdamage = [];
-    //     this.AddPresetDamage(preset.damage_vulnerabilities, "v");
-    //     this.AddPresetDamage(preset.damage_resistances, "r");
-    //     this.AddPresetDamage(preset.damage_immunities, "i");
-
-    //     // Languages
-    //     mon.languages = [];
-    //     mon.telepathy = 0;
-    //     mon.understandsBut = "";
-    //     if (preset.languages.includes("understands")) {
-    //         let speaksUnderstandsArr = preset.languages.split("understands"),
-    //             speaks = speaksUnderstandsArr[0].length > 0 ? speaksUnderstandsArr[0].trim().split(",") : [],
-    //             understands = speaksUnderstandsArr[1].split(" but "),
-    //             understandsLangs = understands[0].replace(", and ", ",").replace(" and ", ",").split(","),
-    //             understandsBut = understands.length > 1 ? understands[1].trim() : "";
-
-    //         for (let index = 0; index < speaks.length; index++)
-    //             this.AddLanguage(speaks[index], true);
-    //         for (let index = 0; index < understandsLangs.length; index++)
-    //             this.AddLanguage(understandsLangs[index], false);
-
-    //         if (understandsBut.toLowerCase().includes("telepathy")) {
-    //             mon.telepathy = parseInt(understandsBut.replace(/\D/g, ''));
-    //             understandsBut = understandsBut.substr(0, understandsBut.lastIndexOf(","));
-    //         }
-    //         mon.understandsBut = understandsBut;
-    //     }
-    //     else {
-    //         let languagesPresetArr = preset.languages.split(",");
-    //         for (let index = 0; index < languagesPresetArr.length; index++) {
-    //             let languageName = languagesPresetArr[index].trim();
-    //             languageName.toLowerCase().includes("telepathy") ?
-    //                 mon.telepathy = parseInt(languageName.replace(/\D/g, '')) :
-    //                 this.AddLanguage(languageName, true);
-    //         }
-    //     }
-
-    //     // Senses
-    //     mon.blindsight = 0;
-    //     mon.blind = false;
-    //     mon.darkvision = 0;
-    //     mon.tremorsense = 0;
-    //     mon.truesight = 0;
-    //     let sensesPresetArr = preset.senses.split(",");
-    //     for (let index = 0; index < sensesPresetArr.length; index++) {
-    //         let senseString = sensesPresetArr[index].trim().toLowerCase(),
-    //             senseName = senseString.split(" ")[0],
-    //             senseDist = StringFunctions.GetNumbersOnly(senseString);
-    //         switch (senseName) {
-    //             case "blindsight":
-    //                 mon.blindsight = senseDist;
-    //                 mon.blind = senseString.toLowerCase().includes("blind beyond");
-    //                 break;
-    //             case "darkvision":
-    //                 mon.darkvision = senseDist;
-    //                 break;
-    //             case "tremorsense":
-    //                 mon.tremorsense = senseDist;
-    //                 break;
-    //             case "truesight":
-    //                 mon.truesight = senseDist;
-    //                 break;
-    //         }
-    //     }
-
-    //     // This
-    //     mon.shortName = "";
-    //     mon.pluralName = "";
-
-    //     // Legendary?
-    //     mon.isLegendary = Array.isArray(preset.legendary_actions);
-    //     if (preset.legendary_desc == null || preset.legendary_desc.length == 0)
-    //         this.LegendaryDescriptionDefault();
-    //     else
-    //         mon.legendariesDescription = preset.legendary_desc;
-    //     FormFunctions.SetLegendaryDescriptionForm();
-
-    //     // Mythic?
-    //     mon.isMythic = Array.isArray(preset.mythic_actions);
-    //     if (preset.mythicy_desc == null || preset.mythic_desc.length == 0)
-    //         this.MythicDescriptionDefault();
-    //     else
-    //         mon.legendariesDescription = preset.mythic_desc;
-    //     FormFunctions.SetMythicDescriptionForm();
-
-    //     // Lair?
-    //     mon.isLair = Array.isArray(preset.lair_actions);
-    //     if (preset.lair_desc == null || preset.lair_desc.length == 0) {
-    //         this.LairDescriptionDefault();
-    //         this.LairDescriptionEndDefault();
-    //     }
-    //     else {
-    //         mon.lairDescription = preset.lair_desc;
-    //         mon.lairDescriptionEnd = preset.lair_desc_end;
-    //     }
-    //     FormFunctions.SetLairDescriptionForm();
-
-    //     // Regional Effects?
-    //     mon.isRegional = Array.isArray(preset.regional_actions);
-    //     if (preset.regional_desc == null || preset.regional_desc.length == 0) {
-    //         this.RegionalDescriptionDefault();
-    //         this.RegionalDescriptionEndDefault();
-    //     }
-    //     else {
-    //         mon.regionalDescription = preset.regional_desc;
-    //         mon.regionalDescriptionEnd = preset.regional_desc_end;
-    //     }
-    //     FormFunctions.SetRegionalDescriptionForm();
-    //     FormFunctions.SetRegionalDescriptionEndForm();
-
-    //     // Abilities
-    //     mon.abilities = [];
-    //     mon.actions = [];
-    //     mon.bonusActions = [];
-    //     mon.reactions = [];
-    //     mon.legendaries = [];
-    //     mon.mythics = []
-    //     mon.lairs = [];
-    //     mon.regionals = [];
-    //     let abilitiesPresetArr = preset.special_abilities,
-    //         actionsPresetArr = preset.actions,
-    //         bonusActionsPresetArr = preset.bonusActions,
-    //         reactionsPresetArr = preset.reactions,
-    //         legendariesPresetArr = preset.legendary_actions,
-    //         mythicPresetArr = preset.mythic_actions,
-    //         lairsPresetArr = preset.lair_actions,
-    //         regionalsPresetArr = preset.regional_actions;
-
-    //     let self = this,
-    //         AbilityPresetLoop = function (arr, name) {
-    //             if (Array.isArray(arr)) {
-    //                 for (let index = 0; index < arr.length; index++)
-    //                     self.AddAbilityPreset(name, arr[index]);
-    //             }
-    //         }
-
-    //     AbilityPresetLoop(abilitiesPresetArr, "abilities");
-    //     AbilityPresetLoop(actionsPresetArr, "actions");
-    //     AbilityPresetLoop(bonusActionsPresetArr, "bonusActions");
-    //     AbilityPresetLoop(reactionsPresetArr, "reactions");
-    //     if (mon.isLegendary)
-    //         AbilityPresetLoop(legendariesPresetArr, "legendaries");
-    //     if (mon.isMythic)
-    //         AbilityPresetLoop(mythicPresetArr, "mythics");
-    //     if (mon.isLair)
-    //         AbilityPresetLoop(lairsPresetArr, "lairs");
-    //     if (mon.isRegional)
-    //         AbilityPresetLoop(regionalsPresetArr, "regionals");
-
-    //     mon.separationPoint = undefined; // This will make the separation point be automatically calculated in UpdateStatblock
-    // },
-
-    // Add abilities, actions, bonus actions, reactions, legendary actions, etc
-    // AddAbility: function (arrName, abilityName, abilityDesc) {
-    //     let arr = mon[arrName];
-    //     ArrayFunctions.ArrayInsert(arr, {
-    //         "name": abilityName.trim(),
-    //         "desc": abilityDesc.trim()
-    //     }, false);
-    // },
 }
 
 function Populate() {
@@ -2411,7 +2199,7 @@ var StringFunctions = {
     },
 
     // Add italics, indents, and newlines
-    FormatString: function (string, isBlock) {
+    FormatString: function (string, isBlock = false) {
         if (typeof string != "string")
             return string;
 
@@ -2435,7 +2223,7 @@ var StringFunctions = {
 
         // Italics and bold
         string = this.FormatStringHelper(string, "_", "<i>", "</i>")
-        string = this.FormatStringHelper(string, "**", "<b>", "</b>")
+        string = this.FormatStringHelper(string, "**", "<strong>", "</strong>")
         return string;
     },
 
