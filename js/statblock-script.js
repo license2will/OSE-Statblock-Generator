@@ -1,32 +1,5 @@
 var data;
 
-class Attack {
-    constructor(count, name, damage) {
-        this.count = count;
-        this.name = name;
-        this.damage = damage; // perform dice interpretation here
-    }
-
-    ToString() {
-        let str = "";
-        str += this.count + " x ";
-        str += this.name + " ";
-        str += "(" + this.damage + ")";
-        return str;
-    }
-}
-
-
-class CustomAttack {
-    constructor(text) {
-        this.text = text;
-    }
-
-    ToString() {
-        return this.text.toString();
-    }
-}
-
 const mon2 = {
     name: "Monster2", 
     description: "A monster.",
@@ -35,7 +8,7 @@ const mon2 = {
     desc_ac: 12,
     hit_dice: 2,
     hit_points: 9,
-    attack_list: [[new Attack(1, "bite", "1"), new Attack(1, "hoof", "1d4")], [new Attack(1, "grasp", "2")], [new CustomAttack("spell")]],
+    attacks: "",
     thac0: 18,
     attack_bonus: 1,
     round_speed: 150,
@@ -54,8 +27,6 @@ const mon2 = {
     numberAppearing: "0 (2d4)",
     treasureType: "None"
 }
-
-
 
 // dice interpretation
 
@@ -79,6 +50,7 @@ function UpdateStatblock() {
     $("#stat-block .asc_ac").text(mon2.asc_ac.toString());
     $("#stat-block .hit_dice").text(mon2.hit_dice.toString());
     $("#stat-block .hit_points").text(mon2.hit_points.toString() + "hp");
+    $("#stat-block .attacks").text(mon2.attacks);
     $("#stat-block .thac0").text(mon2.thac0.toString());
     $("#stat-block .asc_ab").text("");
     $("#stat-block .round_speed").text(mon2.round_speed.toString());
@@ -100,12 +72,12 @@ function UpdateStatblock() {
     $("#stat-block .treasure_type").text(mon2.treasureType.toString());
     
     // display all attacks
-    let attackDisplay = "";
-    for (let i = 0; i < mon2.attack_list.length; i++) {
-        attackDisplay += mon2.attack_list[i].map((element) => { return element.ToString(); }).join(", ");
-        if (i != mon2.attack_list.length - 1) {attackDisplay += " or ";}
-    }
-    $("#stat-block .attacks_list").text(attackDisplay.toString());
+    // let attackDisplay = "";
+    // for (let i = 0; i < mon2.attack_list.length; i++) {
+    //     attackDisplay += mon2.attack_list[i].map((element) => { return element.ToString(); }).join(", ");
+    //     if (i != mon2.attack_list.length - 1) {attackDisplay += " or ";}
+    // }
+    // $("#stat-block .attacks_list").text(attackDisplay.toString());
     
     // // Display All Properties (except CR)
     // let propertiesDisplayList = [];
@@ -252,34 +224,33 @@ var GetVariablesFunctions = {
         GetVariablesFunctions.GetAC();
 
         // Stats
-        mon2.hit_dice = $("#hit_dice_input").val();
+        mon2.hit_dice = $("#hit_dice_input").val().trim();
         mon2.hit_points = Math.floor(mon2.hit_dice * 4.5);
-        mon2.thac0 = $("#thac0_input").val();
-        mon2.speed = $("#speed_input").val();
+        mon2.thac0 = $("#thac0_input").val().trim();
+        mon2.attacks = $("#attacks_input").val().trim();
+        mon2.speed = $("#speed_input").val().trim();
         this.CalcSpeed();
 
         // Saves
-        mon2.saves.death = $("#death_input").val();
-        mon2.saves.wands = $("#wands_input").val();
-        mon2.saves.paralysis = $("#paralysis_input").val();
-        mon2.saves.breath = $("#breath_input").val();
-        mon2.saves.spells = $("#spells_input").val();
-        mon2.saves.saves_as = $("#saves_as_input").val();
+        mon2.saves.death = $("#death_input").val().trim();
+        mon2.saves.wands = $("#wands_input").val().trim();
+        mon2.saves.paralysis = $("#paralysis_input").val().trim();
+        mon2.saves.breath = $("#breath_input").val().trim();
+        mon2.saves.spells = $("#spells_input").val().trim();
+        mon2.saves.saves_as = $("#saves_as_input").val().trim();
 
         // remaining stats
-        mon2.morale = $("#morale_input").val();
-        mon2.alignment = $("#alignment_select option:selected").text();
-        mon2.xP = $("#xp_input").val();
-        mon2.numberAppearing = $("#num_appearing_input").val();
-        mon2.treasureType = $("#treasure_type_input").val();
-
-        // attacks
+        mon2.morale = $("#morale_input").val().trim();
+        mon2.alignment = $("#alignment_select option:selected").text().trim();
+        mon2.xP = $("#xp_input").val().trim();
+        mon2.numberAppearing = $("#num_appearing_input").val().trim();
+        mon2.treasureType = $("#treasure_type_input").val().trim();
     },
 
     GetAC: function() {
-        mon2.ac_type = $('input[name="armor_choice-input"]:checked').val();
-        mon2.asc_ac = parseInt($("#asc_ac_input").val());
-        mon2.desc_ac = parseInt($("#desc_ac_input").val());
+        mon2.ac_type = $('input[name="armor_choice-input"]:checked').val().trim();
+        mon2.asc_ac = parseInt($("#asc_ac_input").val().trim());
+        mon2.desc_ac = parseInt($("#desc_ac_input").val().trim());
     },
 
     // Calculate Ascending/Descending AC
@@ -1628,7 +1599,7 @@ var InputFunctions_old = {
 
         // Insert at end, or replace ability if it exists already
         GetVariablesFunctions.AddAbility(arrName, abilityName, abilityDesc, true);
-
+        
         // Display
         FormFunctions.MakeDisplayList(arrName, false, true);
 

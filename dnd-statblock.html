@@ -86,7 +86,7 @@
                         <div class="stats">
                             <span class="stat_title ac_title">AC</span> <span class="desc_ac">7</span> [<span class="asc_ac">12</span>],
                             <span class="stat_title hit_dice_title">HD</span> <span class="hit_dice">2</span> (<span class="hit_points">9hp</span>),
-                            <span class="stat_title attacks_title">Att</span> <span class="attacks_list">1 x bite (1)</span>,
+                            <span class="stat_title attacks_title">Att</span> <span class="attacks">1 x bite (1)</span>,
                             <span class="stat_title thac0_title">THAC0</span> <span class="thac0">18</span> [<span class="asc_ab">+1</span>],
                             <span class="stat_title speed_title">MV</span> <span class="speed_wrapper"><span class="round_speed">150</span>' (<span class="turn_speed">50</span>')</span>,
                             <span class="stat_title saves_title">SV</span> <span class="saves">
@@ -178,7 +178,10 @@
 
                             <!-- attacks place holder -->
                             <td>
-                                <br>Attacks <a>(below)</a>
+                                <label for="attacks_input">
+                                    Attacks: <br>
+                                    <input type="text" id="attacks_input" class="short_text_input">
+                                </label>
                             </td>
 
                             <!-- thac0 -->
@@ -323,42 +326,6 @@
 
                 <!-- abilities and attacks -->
                 <div class="form" id="abilities_actions">
-                    <!-- attacks -->
-                    <div class="attacks_form">
-                        <div><b>Actions:</b></div>
-                        <div class="attack_list">
-                            <div class="attack_item">
-                                <div class="box-note">(Custom action: <input type="checkbox" id="custom_action_check"> )</div>
-                                <div>
-                                    <label for="atk_count_input">
-                                        Count:
-                                        <input style="margin-left: 0.5rem;" type="number" id="atk_count_input">
-                                    </label>
-                                </div>
-                                <div>
-                                    <label for="atk_name_input">
-                                        Attack:
-                                        <input style="margin-left: 0.5rem; width: 100px;" type="text" id="atk_name_input">
-                                    </label>
-                                </div>
-                                <div>
-                                    <label for="atk_dmg_input">
-                                        Damage:
-                                        <input style="margin-left: 0.5rem; width: 100px;" type="text" id="atk_dmg_input">
-                                    </label>
-                                </div>
-                                <div>
-                                    <label for="atk_custom_input">
-                                        Attack:
-                                        <input style="margin-left: 0.5rem; width: 300px;" type="text" id="atk_custom_input">
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        
-
-                        <button type="button" id="add_action_button" onclick="InputFunctions.NewAttack()">Add Action</button>
-                    </div>
 
                     <!-- abilities -->
                     <div class="abilities_form">
