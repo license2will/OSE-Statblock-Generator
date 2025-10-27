@@ -106,7 +106,7 @@ let mon2 = {
     morale: 7, //editable
     alignment: "Neutral",
     xP: 20,
-    numberAppearing: "0 (2d4)",
+    number_appearing: "0 (2d4)",
     treasureType: "None",
     abilities: new AbilityList(),
     abilities2: new AbilityList()
@@ -156,7 +156,7 @@ function UpdateStatblock() {
     $("#stat-block .morale").text(mon2.morale.toString());
     $("#stat-block .alignment").text(mon2.alignment.toString());
     $("#stat-block .xp").text(mon2.xP.toString());
-    $("#stat-block .number_appearing").text(mon2.numberAppearing.toString());
+    $("#stat-block .number_appearing").text(mon2.number_appearing.toString());
     $("#stat-block .treasure_type").text(mon2.treasureType.toString());
     
     // display all abilites
@@ -245,7 +245,7 @@ var FormFunctions = {
         $("#morale_input").val(mon2.morale);
         $("#alignment_select").val(mon2.alignment);
         $("#xp_input").val(mon2.xP);
-        $("#num_appearing_input").val(mon2.numberAppearing);
+        $("#num_appearing_input").val(mon2.number_appearing);
         $("#treasure_type_input").val(mon2.treasureType);
     },
 
@@ -401,7 +401,7 @@ var GetVariablesFunctions = {
         mon2.morale = $("#morale_input").val().trim();
         mon2.alignment = $("#alignment_select option:selected").text().trim();
         mon2.xP = $("#xp_input").val().trim();
-        mon2.numberAppearing = $("#num_appearing_input").val().trim();
+        mon2.number_appearing = $("#num_appearing_input").val().trim();
         mon2.treasureType = $("#treasure_type_input").val().trim();
     },
 
@@ -437,7 +437,7 @@ var GetVariablesFunctions = {
         mon2.morale = $(".morale").text().trim();
         mon2.alignment = $(".alignment").text().trim();
         mon2.xP = $(".xp").text().trim();
-        mon2.numberAppearing = $(".number_appearing").text().trim();
+        mon2.number_appearing = $(".number_appearing").text().trim();
         mon2.treasureType = $(".treasure_type").text().trim();
 
         // abilities
@@ -698,10 +698,18 @@ function TryPrint() {
 
 // View as image function
 function TryImage() {
-    domtoimage.toBlob(document.getElementById("stat-block"))
-        .then(function (blob) {
-            window.saves_as(blob, mon.name.toLowerCase() + ".png");
-        });
+    const node = document.getElementById('stat-block');
+    if (node != null) {
+        htmlToImage
+            .toBlob(node)
+            .then(function (blob) {
+                if (window.saveAs) {
+                window.saveAs(blob, mon2.name.toLowerCase() + '.png');
+                } else {
+                FileSaver.saveAs(blob, 'monster.png');
+            }
+            });
+    }
 }
 
 // Update the main stat block from form variables

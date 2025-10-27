@@ -34,7 +34,7 @@
     "hit_points": 9,
     "morale": "7",
     "name": "Camel",
-    "numberAppearing": "0 (2d4)",
+    "number_appearing": "0 (2d4)",
     "round_speed": 150,
     "saves": {
         "breath": "B15",
