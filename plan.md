@@ -29,3 +29,8 @@ features:
 - import markdown (through text box)
 - import OSE SRD format (through text box)
 - export markdown
+
+Custom json formatting – a different object per section, hrs separate section. Each attribute includes:
+    - key (name for the attribute)
+    - value
+    - type (eg number, text, long_text, h6, h5, h4, h3, h2, h1, etc.)

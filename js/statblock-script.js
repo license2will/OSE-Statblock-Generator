@@ -525,6 +525,8 @@ var SavedData = {
     },
 }
 
+
+
 function Populate() {
     console.log("hello");
     // FormFunctions.SetLegendaryDescriptionForm();
@@ -974,24 +976,9 @@ function ReplaceTags(desc) {
     return desc;
 }
 
-// Homebrewery/GM Binder markdown
-function TryMarkdown() {
-    let markdownWindow = window.open();
-    let markdown = ['<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><title>', mon.name, '</title><link rel="shortcut icon" type="image/x-icon" href="./dndimages/favicon.ico" /></head><body>'];
-    
-    markdown.push(
-        "<h2>Homebrewery V3</h2>",
-        BuildMarkdown(V3_MARKDOWN),
-        "<h2>Homebrewery (Legacy)/GM Binder Markdown</h2>",
-        BuildMarkdown(LEGACY_MARKDOWN));
 
 
-    markdown.push("</body></html>");
-
-    markdownWindow.document.write(markdown.join(""));
-}
-
-function BuildMarkdown(isV3Markdown) {
+function BuildMarkdown_old(isV3Markdown) {
     let markdownLines = [];
 
     if (isV3Markdown) {
@@ -1120,7 +1107,7 @@ function LegacyMarkdownFormating(markdownLines) {
     }
 }
 
-function ConvertMarkdownToHtmlString(markdownLines) {
+function ConvertMarkdownToHtmlString_old(markdownLines) {
     // Add line breaks and code tags
     let builtLines = [];
     
