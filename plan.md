@@ -12,8 +12,8 @@
 1. default load-outs for each level
 2. a few default monsters
 3. editing the stat names (eg changing the AC label)
-4. editing the AC within the stat block based on the selector
-5. changing the THAC0 based on asc/desc armor class
+4. editing which AC and THAC0 display within the stat block based on the selector
+x. changing the THAC0 based on asc/desc armor class
 6. formatting the abilities and statblock overall
 7. formatting the abilities in the display list
 8. attacks better

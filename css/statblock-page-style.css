@@ -66,8 +66,6 @@
     font-weight: bold;
 }
 
-
-
 /* element specific stuff */
 
 /* options div */
@@ -81,8 +79,9 @@
     width: 100%;
 }
 
-.options .form {
+.options .form, .options .form div {
     margin-top: 1rem;
+    width: 100%;
 }
 
 .options .short_text_input {
@@ -102,14 +101,10 @@
 }
 
 /* description */
-.abilities_descr {
-    width:100%;
-}
-
-#abilities_descr_input {
+/* .wide_text {
     width: 100%;
     max-width: 40rem;
-}
+} */
 
 /* ascending armour */
 form .armor_choice_form {
@@ -121,15 +116,12 @@ form .armor_choice_form {
 }
 
 /* abilities and attacks */
-#abilities_actions {
+/* #abilities_actions {
     display: flex;
     gap: 30px;
     justify-content: space-evenly;
     align-items: flex-start;
-}
-
-
-
+} */
 
 
 @media screen and (min-width: 992px) {

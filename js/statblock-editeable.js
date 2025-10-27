@@ -18,7 +18,6 @@ $(document).ready(function() {
     $('#stat-block').on('blur', '*', function(event) {
         event.stopPropagation();
         $(this).removeAttr('contenteditable');
-        console.log(this.innerHTML);
         GetVariablesFunctions.GetVariablesFromBlock();
         FormFunctions.SetForms();
         UpdateBlockFromVariables();

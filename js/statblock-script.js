@@ -135,10 +135,12 @@ function UpdateStatblock() {
     $("#stat-block .hit_dice").text(mon2.hit_dice.toString());
     $("#stat-block .hit_points").text(mon2.hit_points.toString() + "hp");
     $("#stat-block .attacks").html(StringFunctions.FormatString(mon2.attacks));
+
     $("#stat-block .thac0").text(mon2.thac0.toString());
     if (mon2.attack_bonus >= 0) {
         $("#stat-block .asc_ab").text("+" + mon2.attack_bonus.toString());
     } else { $("#stat-block .asc_ab").text(mon2.attack_bonus.toString()); }
+
     $("#stat-block .round_speed").text(mon2.round_speed.toString());
     $("#stat-block .turn_speed").text(mon2.speed.toString());
     
@@ -169,8 +171,14 @@ var FormFunctions = {
         const old_ac = mon2.ac_type;
         GetVariablesFunctions.GetAC();
         GetVariablesFunctions.CalcAC(old_ac);
+        GetVariablesFunctions.GetTHAC0();
+        console.log("mon2.thac0 " + mon2.thac0 + " mon2.attack_bonus " + mon2.attack_bonus);
+        GetVariablesFunctions.CalcTHAC0(old_ac);
+        console.log("mon2.thac0 " + mon2.thac0 + " mon2.attack_bonus " + mon2.attack_bonus);
         $('#asc_ac_input').val(mon2.asc_ac);
         $('#desc_ac_input').val(mon2.desc_ac);
+        $('#thac0_input').val(mon2.thac0);
+        $('#attack_bonus_input').val(mon2.attack_bonus);
         this.ShowHideAscendAC();
         UpdateBlockFromVariables();
     },
@@ -180,12 +188,29 @@ var FormFunctions = {
         $(".ac_prompt").show();
         switch (mon2.ac_type) {
             case "asc":
-                $("#desc_ac_input_prompt").hide();
+                $(".desc_ac_input_prompt").hide();
                 break;
             case "both":
             case "desc":
-                $("#asc_ac_input_prompt").hide();
+                $(".asc_ac_input_prompt").hide();
                 break;
+        }
+        // stat block
+        // hide both ac types
+        $("#stat-block .ac_statblock, #stat-block .thac0, #stat-block .asc_ab_wrapper").hide();
+        if (mon2.ac_type == "asc") {
+            $("#stat-block .asc_ac_wrapper").html("<span class=\"asc_ac ac_statblock\">12</span>").show();
+            $("#stat-block .asc_ab_wrapper").html("<span class=\"asc_ab\">+1</span>").show();
+            $("#stat-block .thac0_title").text("AB");
+        } else if (mon2.ac_type == "desc") {
+            $("#stat-block .desc_ac").show();
+            $("#stat-block .thac0").show();
+            $("#stat-block .thac0_title").text("THAC0");
+        } else if (mon2.ac_type == "both") {
+            $("#stat-block .thac0_title").text("THAC0");
+            $("#stat-block .asc_ac_wrapper").html(" [<span class=\"asc_ac ac_statblock\">12</span>]");
+            $("#stat-block .asc_ab_wrapper").html(" [<span class=\"asc_ab\">+1</span>]");
+            $("#stat-block .ac_statblock, #stat-block .thac0, #stat-block .asc_ab_wrapper").show();
         }
     },
 
@@ -204,6 +229,7 @@ var FormFunctions = {
         // Stats
         $("#hit_dice_input").val(mon2.hit_dice);
         $("#thac0_input").val(mon2.thac0);
+        $("#attack_bonus_input").val(mon2.attack_bonus);
         $("#attacks_input").val(mon2.attacks);
         $("#speed_input").val(mon2.speed);
 
@@ -358,9 +384,8 @@ var GetVariablesFunctions = {
         // Stats
         mon2.hit_dice = $("#hit_dice_input").val().trim();
         mon2.hit_points = Math.floor(mon2.hit_dice * 4.5);
-        mon2.thac0 = $("#thac0_input").val().trim();
-        mon2.attack_bonus = 19 - mon2.thac0;
-        mon2.attacks = $("#attacks_input").val().trim();
+        GetVariablesFunctions.GetTHAC0();
+        this.CalcTHAC0(mon2.ac_type);
         mon2.speed = $("#speed_input").val().trim();
         this.CalcSpeed();
 
@@ -395,7 +420,8 @@ var GetVariablesFunctions = {
         mon2.hit_points = Math.floor(mon2.hit_dice * 4.5);
         mon2.attacks = $(".attacks").text().trim();
         mon2.thac0 = parseInt($(".thac0").text().trim());
-        mon2.attack_bonus = 19 - mon2.thac0;
+        mon2.attack_bonus = parseInt($(".asc_ab").text().trim().slice(1));
+        this.CalcTHAC0(mon2.ac_type);
         mon2.speed = parseInt($(".turn_speed").text().trim());
         this.CalcSpeed();
 
@@ -419,7 +445,6 @@ var GetVariablesFunctions = {
         $(".abilities_list ul").children().each(function (index) {
             let [name, description] = [$(this).find(".ability_title").text(), $(this).find(".ability_text").text()];
             if (name.trim().slice(-1) == ":") name = name.trim().slice(0, -1);
-            console.log(name);
             mon2.abilities.addAbility(name.trim(), description.trim());
         });
     },
@@ -428,6 +453,12 @@ var GetVariablesFunctions = {
         mon2.ac_type = $('input[name="armor_choice-input"]:checked').val().trim();
         mon2.asc_ac = parseInt($("#asc_ac_input").val().trim());
         mon2.desc_ac = parseInt($("#desc_ac_input").val().trim());
+    },
+
+    GetTHAC0: function() {
+        mon2.ac_type = $('input[name="armor_choice-input"]:checked').val().trim();
+        mon2.thac0 = parseInt($("#thac0_input").val().trim());
+        mon2.attack_bonus = parseInt($("#attack_bonus_input").val().trim());
     },
 
     // Calculate Ascending/Descending AC
@@ -440,6 +471,17 @@ var GetVariablesFunctions = {
             mon2.asc_ac = new_ac;
         }
         return new_ac;
+    },
+
+    CalcTHAC0: function(base_type) {
+        const old_thac0 = (base_type == "asc") ? mon2.attack_bonus : mon2.thac0;
+        const new_thac0 = (19 - old_thac0);
+        if (base_type == "asc") {
+            mon2.thac0 = new_thac0;
+        } else {
+            mon2.attack_bonus = new_thac0;
+        }
+        return new_thac0;
     },
 
     CalcSpeed: function() {

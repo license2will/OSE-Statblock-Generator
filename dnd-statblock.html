@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <title>D&amp;D 5e Statblock Generator</title>
     <link rel="shortcut icon" type="image/x-icon" href="dndimages/favicon.ico" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"> -->
     <link rel="stylesheet" type="text/css" href="css/statblock-style.css">
     <link rel="stylesheet" type="text/css" href="css/statblock-page-style.css">
     <link rel="stylesheet" type="text/css" href="css/dnd-style.css">
@@ -85,10 +85,10 @@
 
                         <!-- stats -->
                         <div class="stats">
-                            <span class="stat_title ac_title">AC</span> <span class="desc_ac">7</span> [<span class="asc_ac">12</span>],
+                            <span class="stat_title ac_title">AC</span> <span class="desc_ac ac_statblock">7</span><span class="asc_ac_wrapper ac_statblock"> [<span class="asc_ac">12</span>]</span>,
                             <span class="stat_title hit_dice_title">HD</span> <span class="hit_dice">2</span> (<span class="hit_points">9hp</span>),
                             <span class="stat_title attacks_title">Att</span> <span class="attacks">1 x bite (1)</span>,
-                            <span class="stat_title thac0_title">THAC0</span> <span class="thac0">18</span> [<span class="asc_ab">+1</span>],
+                            <span class="stat_title thac0_title">THAC0</span> <span class="thac0">18</span><span class="asc_ab_wrapper"> [<span class="asc_ab">+1</span>]</span>,
                             <span class="stat_title speed_title">MV</span> <span class="speed_wrapper"><span class="round_speed">150</span>' (<span class="turn_speed">50</span>')</span>,
                             <span class="stat_title saves_title">SV</span> <span class="saves">
                                 <span class="death_save">D12</span>
@@ -106,7 +106,6 @@
                         </div>
 
                         <hr>
-
                         <!-- abilities -->
                          <div class="abilities_list">
                             <ul>
@@ -132,7 +131,7 @@
 
                 <!-- description – long text format which supports markdown -->
                 <b style="margin-top: 1rem;">Description:</b>
-                <div class="monster_descr"><textarea id="monster_descr_input" style="height: 10em;"></textarea></div>
+                <div class="monster_descr" style="width: 100%;"><textarea id="monster_descr_input" style="height: 10em;"></textarea></div>
 
                 <hr>
 
@@ -159,11 +158,11 @@
                         <tr>
                             <!-- armor class -->
                             <td>
-                                <div id="asc_ac_input_prompt" class="ac_prompt"><label for="asc_ac_input">
+                                <div class="asc_ac_input_prompt ac_prompt"><label for="asc_ac_input">
                                     AC (Asc):<br>
                                     <input type="number" id="asc_ac_input" min="-99" max="99" value="7">
                                 </label></div>
-                                <div id="desc_ac_input_prompt" class="ac_prompt"><label for="desc_ac_input">
+                                <div class="desc_ac_input_prompt ac_prompt"><label for="desc_ac_input">
                                     AC (Desc):<br>
                                     <input type="number" id="desc_ac_input" min="-99" max="99" value="12">
                                 </label></div>
@@ -177,7 +176,7 @@
                                 </label>
                             </td>
 
-                            <!-- attacks place holder -->
+                            <!-- attacks -->
                             <td>
                                 <label for="attacks_input">
                                     Attacks: <br>
@@ -187,9 +186,13 @@
 
                             <!-- thac0 -->
                             <td>
-                                <div><label for="thac0_input">
+                                <div class="desc_ac_input_prompt ac_prompt"><label for="thac0_input">
                                     THAC0: <br>
                                     <input type="number" id="thac0_input" min="-20" max="99" value="18">
+                                </label></div>
+                                <div class="asc_ac_input_prompt ac_prompt"><label for="attack_bonus_input">
+                                    Attack Bonus: <br>
+                                    <input type="number" id="attack_bonus_input" min="-20" max="99" value="1">
                                 </label></div>
                             </td>
 
@@ -335,8 +338,8 @@
                             Name:
                             <input id="abilities_name_input" type="text" value="" style="margin-left: 0.5rem; width: 30%;">
                         </label></div>
-                        <div><label for="abilities_descr_input">
-                            <textarea id="abilities_descr_input" style="height: 10em;"></textarea>
+                        <div class="wide_text"><label for="abilities_descr_input">
+                            <textarea id="abilities_descr_input" class="wide_text" style="height: 10em;"></textarea>
                         </label></div>
 
                         <!-- abilities button -->
