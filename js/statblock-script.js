@@ -673,44 +673,6 @@ const MYTHIC = "MYTHIC"
 const REGIONAL = "REGIONAL"
 const LAIR = "LAIR"
 
-// Save function
-var TrySaveFile = () => {
-    SavedData.SaveToFile();
-}
-
-// Upload file function
-var LoadFilePrompt = () => {
-    $("#file-upload").click();
-}
-
-// Load function
-var TryLoadFile = () => {
-    SavedData.RetrieveFromFile();
-}
-
-// Print function
-function TryPrint() {
-    let printWindow = window.open();
-    printWindow.document.write('<html><head><meta charset="utf-8"/><title>' + mon.name + '</title><link rel="shortcut icon" type="image/x-icon" href="./dndimages/favicon.ico" /><link rel="stylesheet" type="text/css" href="css/statblock-style.css"><link rel="stylesheet" type="text/css" href="css/libre-baskerville.css"><link rel="stylesheet" type="text/css" href="css/noto-sans.css"></head><body><div id="print-block" class="content">');
-    printWindow.document.write($("#stat-block-wrapper").html());
-    printWindow.document.write('</div></body></html>');
-}
-
-// View as image function
-function TryImage() {
-    const node = document.getElementById('stat-block');
-    if (node != null) {
-        htmlToImage
-            .toBlob(node)
-            .then(function (blob) {
-                if (window.saveAs) {
-                window.saveAs(blob, mon2.name.toLowerCase() + '.png');
-                } else {
-                FileSaver.saveAs(blob, 'monster.png');
-            }
-            });
-    }
-}
 
 // Update the main stat block from form variables
 function UpdateBlockFromVariables_old(moveSeparationPoint) {

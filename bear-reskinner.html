@@ -4,11 +4,16 @@
 <head>
     <meta charset="utf-8" />
     <title>The Bear Reskinner – OSE Statblock Generator</title>
+
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Lexend+Deca:wght@700&display=swap');
+    </style>
+
     <link rel="shortcut icon" type="image/x-icon" href="dndimages/favicon.ico" />
     <!-- <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"> -->
+    <link rel="stylesheet" type="text/css" href="css/dnd-style.css">
     <link rel="stylesheet" type="text/css" href="css/statblock-style.css">
     <link rel="stylesheet" type="text/css" href="css/statblock-page-style.css">
-    <link rel="stylesheet" type="text/css" href="css/dnd-style.css">
     <link rel="stylesheet" type="text/css" href="css/libre-baskerville.css">
     <link rel="stylesheet" type="text/css" href="css/noto-sans.css">
     <script src="js/jquery-3.7.1.min.js"></script>
@@ -18,6 +23,7 @@
     <script src="js/statblock-script.js"></script>
     <script src="js/statblock-editeable.js"></script>
     <script src="js/statblock-export.js"></script>
+
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145234284-1"></script>
@@ -73,11 +79,12 @@
 
             <!-- The Actual Stat Block -->
             <div id="stat-block-wrapper">
-                <div id="stat-block" class="stat-block">
-                    <hr class="orange-border" />
+                <div id="stat-block" class="stat-block default_style">
+                    <hr class="top-border" />
                     <div class="section">
-                        <div class="creature-heading">
+                        <div class="monster_heading">
                             <h1 class="monster_name">Monster</h1>
+                            <!-- <h2 class="monster_tags">TEMPORARY TAG</h2> -->
                         </div> <!-- creature heading -->
 
                         <div class="description">A monster.</div>
@@ -116,7 +123,7 @@
 
 
                     </div>
-                    <hr class="orange-border bottom" />
+                    <hr class="bottom-border" />
                 </div>
             </div> <!-- stat block -->
 

@@ -35,6 +35,14 @@ function TryImage() {
                 FileSaver.saveAs(blob, 'monster.png');
             }
             });
+        // htmlToImage
+        //     .toJpeg(node, { quality: 0.95 })
+        //     .then(function (dataUrl) {
+        //         var link = document.createElement('a');
+        //         link.download = mon2.name.toLowerCase() + '.jpeg';
+        //         link.href = dataUrl;
+        //         link.click();
+        //     });
     }
 }
 

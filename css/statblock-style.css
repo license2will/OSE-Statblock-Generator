@@ -1,3 +1,22 @@
+:root {
+    --ose-default-light-green: #d7e8cc;
+}
+
+.lexend-deca-bold> {
+    font-family: "Lexend Deca", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+}
+
+
+.eb-garamond-normal {
+  font-family: "EB Garamond", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
 .stat-block {
     text-align: left;
     font-size: 12.5px;
@@ -5,10 +24,9 @@
     display: inline-block;
     vertical-align: top;
     width: 400px;
-    background: #FDF1DC;
+    background-color: white;
     background-size: cover;
 	background-position: center; 
-    background-image: url('../dndimages/statblockparch.jpg');
     padding: 10px 10px 20px;
     box-sizing: border-box;
     font-family: 'Noto Sans', 'Myriad Pro', Calibri, Helvetica, Arial, sans-serif;
@@ -39,24 +57,7 @@
     font-weight: bold;
 }
 
-
-/* @media screen and (max-width: 675px) { */
-/* .stat-block.wide { */
-/* min-width: 280px; */
-/* } */
-/* .stat-block.wide .section-left, */
-/* .stat-block.wide .section-right { */
-/* display: block; */
-/* width: 100%; */
-/* } */
-/* .stat-block.wide .section-left { */
-/* margin: 0; */
-/* } */
-/* .stat-block.wide .section-right { */
-/* margin: 0; */
-/* } */
-/* } */
-.orange-border {
+hr.top-border {
     display: block;
     background: #E69A28;
     background-size: cover;
@@ -68,6 +69,7 @@
     margin: -10px -10px 0;
     box-sizing: initial;
 }
+
 
 .orange-border.bottom {
     margin: 15px -10px -20px;
@@ -82,22 +84,21 @@
     fill: #922610;
 }
 
-.creature-heading {
+.monster_heading {
     margin: 0 0 10px;
 }
 
-.creature-heading h1 {
+.monster_heading h1 {
     font-family: 'Libre Baskerville', 'Lora', 'Calisto MT', 'Bookman Old Style', Bookman, 'Goudy Old Style', Garamond, 'Hoefler Text', 'Bitstream Charter', Georgia, serif;
-    color: #922610;
+    color: black;
     font-size: 21px;
     line-height: 1.2em;
     margin: 10px 0 0;
     letter-spacing: 1px;
-    font-variant: small-caps;
     font-weight: bold;
 }
 
-.creature-heading h2 {
+.monster_heading h2 {
     font-family: 'Noto Sans', 'Myriad Pro', Calibri, Helvetica, Arial, sans-serif;
     font-weight: normal;
     font-style: italic;
@@ -263,4 +264,72 @@
 
 #print-block .orange-border {
     display: none;
+}
+
+
+/* ==================== STYLES ==================== */
+
+/* ========== DEFAULT STYLE ========== */
+.stat-block.default_style {
+    font-family: 'EB Garamond', Georgia, serif;
+    width: 250px;
+    font-size: 15px;
+    line-height: 1.15em;
+}
+
+.default_style hr.top-border,
+.default_style hr.bottom-border  {
+    display: none;
+}
+
+.default_style .monster_heading {
+    margin: 0;
+    margin-bottom: 5px;;
+}
+
+.default_style .monster_heading h1 {
+    background-color: var(--ose-default-light-green);
+    line-height: 1em;
+    padding: 6px 6px;
+    font-family: 'Lexend Deca', sans-serif;
+    letter-spacing: -1px;
+    font-size: 19px;
+    margin-top: 0;
+}
+
+.default_style hr {
+    border: 0.5px solid black;
+    margin: 4px 0;
+}
+
+.default_style .stats {
+    line-height: 1.2em;
+}
+
+.default_style ul {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0px;
+    list-style-type: none;
+    line-height: 1.1em;
+}
+
+.default_style li {
+    text-indent: 0em;
+    margin-bottom: 0.5em;
+}
+
+.default_style li:last-child {
+    margin-bottom: 0;
+}
+
+.default_style li::before {
+    content: "▶ ";
+    padding-right: 6px;
+    color: black;
+    font-size: 0.65em;
+}
+
+.default_style .ability_title {
+    font-weight: bold;
 }

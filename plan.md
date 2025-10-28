@@ -5,11 +5,13 @@
 
 
 
+stat-block features:
+1. tags (eg for dolmenwood)
+2. editing the stat names (eg changing the AC label)
+3. default load-outs for each level
+4. a few default monsters
 
-1. default load-outs for each level
-2. a few default monsters
-3. editing the stat names (eg changing the AC label)
-4. editing which AC and THAC0 display within the stat block based on the selector
+x. editing which AC and THAC0 display within the stat block based on the selector
 x. changing the THAC0 based on asc/desc armor class
 6. formatting the abilities and statblock overall
 7. formatting the abilities in the display list
@@ -18,7 +20,7 @@ x. changing the THAC0 based on asc/desc armor class
 10. fix alignment bug
 11. custom hit points, and hit point calculation, and no hit dice
 12. safer saving throw editing - being able to edit the name of the saving throw as well as the value independently
-13. edit in place abilities list
+x. edit in place abilities list
 14. delete abilities from ability display list when deleted from stat block
 
 
