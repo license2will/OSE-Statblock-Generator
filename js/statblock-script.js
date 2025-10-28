@@ -1,4 +1,4 @@
-var data;
+let defaultPreset;
 
 class AbilityList {
     constructor() {
@@ -97,20 +97,20 @@ let mon2 = {
     round_speed: 150,
     speed: 50,
     saves: {
-        death: 12,
-        wands: 13,
-        paralysis: 14,
-        breath: 15,
-        spells: 16,
+        death: "D12",
+        wands: "W13",
+        paralysis: "P14",
+        breath: "B15",
+        spells: "S16",
         saves_as: 1
     },
     morale: 7, //editable
     alignment: "Neutral",
+    custom_alignment: {checked: false, value: ""},
     xP: 20,
     number_appearing: "0 (2d4)",
     treasureType: "None",
-    abilities: new AbilityList(),
-    abilities2: new AbilityList()
+    abilities: new AbilityList()
 }
 
 // dice interpretation
@@ -167,7 +167,13 @@ function UpdateStatblock() {
     
     // remaining stats
     $("#stat-block .morale").text(mon2.morale.toString());
-    $("#stat-block .alignment").text(mon2.alignment.toString());
+
+    // Alignment
+    if (mon2.custom_alignment == undefined) {
+        mon2.custom_alignment = {checked: false, value: ""};
+    }
+    $("#stat-block .alignment").text((mon2.custom_alignment.checked == false ? mon2.alignment.toString() : mon2.custom_alignment.value.toString()));
+
     $("#stat-block .xp").text(mon2.xP.toString());
     $("#stat-block .number_appearing").text(mon2.number_appearing.toString());
     $("#stat-block .treasure_type").text(mon2.treasureType.toString());
@@ -243,6 +249,19 @@ var FormFunctions = {
         $("#custom_hit_dice_input").val(mon2.custom_hp.value);
     },
 
+    // Custom Alignment
+    ChangeCustomAlignment: function() {
+        $("#custom_alignment_check").prop("checked") ? mon2.custom_alignment.checked = true : mon2.custom_alignment.checked = false;
+        if (mon2.custom_alignment.checked) {
+            $(".alignment_select").hide();
+            $(".alignment_custom").show();
+        } else {
+            $(".alignment_select").show();
+            $(".alignment_custom").hide();
+        }
+        $("#custom_alignment_input").val(mon2.custom_alignment.value);
+    },
+
     // Set the forms
     SetForms: function () {
         // Name and type
@@ -260,6 +279,7 @@ var FormFunctions = {
         $("#custom_hd_check").prop("checked", mon2.custom_hp.checked);
         $("#custom_hit_dice_input").val(mon2.custom_hp.value);
         this.ChangeHD();
+
         $("#thac0_input").val(mon2.thac0);
         $("#attack_bonus_input").val(mon2.attack_bonus);
         $("#attacks_input").val(mon2.attacks);
@@ -275,7 +295,16 @@ var FormFunctions = {
 
         // remaining stats
         $("#morale_input").val(mon2.morale);
+
+        if (mon2.custom_alignment == undefined) {
+            mon2.custom_alignment = {checked: false, value: ""};
+        }
+        $("#custom_alignment_check").prop("checked", mon2.custom_alignment.checked);
         $("#alignment_select").val(mon2.alignment);
+        $("#custom_alignment_input").val(mon2.custom_alignment.value);
+        this.ChangeCustomAlignment();
+
+
         $("#xp_input").val(mon2.xP);
         $("#num_appearing_input").val(mon2.number_appearing);
         $("#treasure_type_input").val(mon2.treasureType);
@@ -397,9 +426,28 @@ var InputFunctions = {
     SortAbilityList: function() {
         mon2.abilities.sort();
         this.UpdateAbilitiesList();
+    },
+
+    GetPreset: function () {
+        let name = $("#monster-select").val();
+        if (name == "") return;
+        if (name == "default") {
+            SavedData.LoadFromData(defaultPreset);
+            FormFunctions.SetForms();
+            UpdateStatblock();
+            return;
+        }
+        $.getJSON("js/JSON/" + name + ".json", function (json) {
+            SavedData.LoadFromData(json);
+            FormFunctions.SetForms();
+            UpdateStatblock();
+        })
+            .fail(function () {
+                console.error("Failed to load preset.");
+                return;
+            })
     }
 }
-
 
 // Functions to get/set important variables
 var GetVariablesFunctions = {
@@ -419,6 +467,9 @@ var GetVariablesFunctions = {
         mon2.custom_hp.checked = $("#custom_hd_check").prop("checked");
         mon2.custom_hp.value = $("#custom_hit_dice_input").val().trim();
 
+        // Attacks
+        mon2.attacks = $("#attacks_input").val().trim();
+
         // THAC0/Attack Bonus
         GetVariablesFunctions.GetTHAC0();
         this.CalcTHAC0(mon2.ac_type);
@@ -437,7 +488,12 @@ var GetVariablesFunctions = {
 
         // remaining stats
         mon2.morale = $("#morale_input").val().trim();
+
+        //Alignment
         mon2.alignment = $("#alignment_select option:selected").text().trim();
+        mon2.custom_alignment.checked = $("#custom_alignment_check").prop("checked");
+        mon2.custom_alignment.value = $("#custom_alignment_input").val().trim();
+
         mon2.xP = $("#xp_input").val().trim();
         mon2.number_appearing = $("#num_appearing_input").val().trim();
         mon2.treasureType = $("#treasure_type_input").val().trim();
@@ -480,7 +536,10 @@ var GetVariablesFunctions = {
 
         // remaining stats
         mon2.morale = $(".morale").text().trim();
-        mon2.alignment = $(".alignment").text().trim();
+
+        mon2.custom_alignment.value = $(".alignment").text().trim();
+        mon2.custom_alignment.checked = true;
+
         mon2.xP = $(".xp").text().trim();
         mon2.number_appearing = $(".number_appearing").text().trim();
         mon2.treasureType = $(".treasure_type").text().trim();
@@ -537,7 +596,6 @@ var GetVariablesFunctions = {
 // Functions for saving/loading data
 var SavedData = {
     // Saving
-
     SaveToLocalStorage: () => localStorage.setItem("SavedData", JSON.stringify(mon2)),
 
     SaveToFile: () => saveAs(new Blob([JSON.stringify(mon2)], {
@@ -568,6 +626,13 @@ var SavedData = {
 
         reader.readAsText(file);
     },
+
+    LoadFromData: function(JSONdata) {
+        mon2 = (JSONdata);
+        mon2.abilities = Object.assign(new AbilityList(), mon2.abilities);
+        InputFunctions.UpdateAbilitiesList();
+        Populate();
+    }
 }
 
 
@@ -591,42 +656,36 @@ function Populate() {
 // Document ready function
 $(function () {
     // Load the preset monster names
-    // $.getJSON("https://api.open5e.com/monsters/?format=json&fields=slug,name&limit=1000&document__slug=wotc-srd", function (srdArr) {
-    //     let monsterSelect = $("#monster-select");
-    //     monsterSelect.append("<option value=''></option>");
-    //     monsterSelect.append("<option value=''>-5e SRD-</option>");
-    //     $.each(srdArr.results, function (index, value) {
-    //         monsterSelect.append("<option value='" + value.slug + "'>" + value.name + "</option>");
-    //     })
-    //     $.getJSON("https://api.open5e.com/monsters/?format=json&fields=slug,name&limit=1000&document__slug=tob", function (tobArr) {
-    //         monsterSelect.append("<option value=''></option>");
-    //         monsterSelect.append("<option value=''>-Tome of Beasts (Kobold Press)-</option>");
-    //         $.each(tobArr.results, function (index, value) {
-    //             monsterSelect.append("<option value='" + value.slug + "'>" + value.name + "</option>");
-    //         })
-    //     })
-    //         .fail(function () {
-    //             $("#monster-select-form").html("Unable to load Tome of Beasts monster presets.")
-    //         });
-    // })
-    //     .fail(function () {
-    //         $("#monster-select-form").html("Unable to load monster presets.")
-    //     });
+    let monsterSelect = $("#monster-select");
+    const listOptions = [
+                        {name: "HD <=1", value:"hd1"},
+                        {name: "HD 1+ to 2", value:"hd2"},
+                        {name: "HD 2+ to 3", value:"hd3"},
+                        {name: "HD 3+ to 4", value:"hd4"},
+                        {name: "HD 4+ to 5", value:"hd5"},
+                        {name: "HD 5+ to 6", value:"hd6"},
+                        {name: "HD 6+ to 7", value:"hd7"},
+                        {name: "HD 7+ to 9", value:"hd9"},
+                        {name: "HD 9+ to 11",  value:"hd11"},
+                        {name: "HD 11+ to 13", value:"hd13"},
+                        {name: "HD 13+ to 15", value:"hd15"},
+                        {name: "HD 15+ to 17", value:"hd17"},
+                        {name: "HD 17+ to 19", value:"hd19"},
+                        {name: "HD 19+ to 21", value:"hd21"},
+                        {name: "HD 21+", value:"hd22"},
+                        {name: "", value:""},
+                        {name: "Camel", value:"camel"},
+                        {name: "Acolyte (1HD)", value:"acolyte"}
+                        ]
+    $.each(listOptions, function (index, option) {
+        monsterSelect.append("<option value='" + option.value + "'>" + option.name + "</option>");
+    });
 
-    // Load the json data
-    // $.getJSON("js/JSON/statblockdata.json", function (json) {
-    //     data = json;
-
-    //     // Set the default monster in case there isn't one saved
-    //     // GetVariablesFunctions.SetPreset(data.defaultPreset);
-    //     // uncomment later
-
-    //     // Load saved data
-    //     SavedData.RetrieveFromLocalStorage();
-
-    //     Populate();
-    // });
-
+    $.getJSON("js/JSON/monster.json", function (json) {
+        console.log(typeof(json) + " " + JSON.stringify(json));
+        SavedData.LoadFromData(json);
+        defaultPreset = json;
+    });
     SavedData.RetrieveFromLocalStorage();
     Populate();
 
@@ -1704,7 +1763,7 @@ var GetVariablesFunctions_old = {
     },
 
     // Get all variables from preset
-    SetPreset: function (preset) {
+    SetPreset_old: function (preset) {
         // Name and type
         mon.name = preset.name.trim();
         mon.size = preset.size.trim().toLowerCase();
