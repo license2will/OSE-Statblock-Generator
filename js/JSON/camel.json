@@ -32,6 +32,10 @@
     "description": "Irascible animals that are adapted to life in dry climates. Often used for transportation in deserts.",
     "hit_dice": "2",
     "hit_points": 9,
+    "custom_hp": {
+        "checked": false,
+        "value": ""
+    },
     "morale": "7",
     "name": "Camel",
     "number_appearing": "0 (2d4)",

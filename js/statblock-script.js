@@ -90,6 +90,7 @@ let mon2 = {
     desc_ac: 12,
     hit_dice: 2,
     hit_points: 9,
+    custom_hp: {checked: false, value: ""},
     attacks: "",
     thac0: 18,
     attack_bonus: 1,
@@ -132,15 +133,27 @@ function UpdateStatblock() {
     // Stats
     $("#stat-block .desc_ac").text(mon2.desc_ac.toString());
     $("#stat-block .asc_ac").text(mon2.asc_ac.toString());
-    $("#stat-block .hit_dice").text(mon2.hit_dice.toString());
-    $("#stat-block .hit_points").text(mon2.hit_points.toString() + "hp");
+
+    // Hit Dice/HP
+    const hit_dice_field = $(".hit_dice_field");
+    hit_dice_field.html("<span class=\"hit_dice\"></span> (<span class=\"hit_points\"></span>)</span>")
+    if (!mon2.custom_hp.checked) {
+        $("#stat-block .hit_dice").text(mon2.hit_dice.toString());
+        $("#stat-block .hit_points").text(mon2.hit_points.toString() + "hp");
+    } else {
+        hit_dice_field.html(mon2.custom_hp.value);
+    }
+
+    // Attacks
     $("#stat-block .attacks").html(StringFunctions.FormatString(mon2.attacks));
 
+    // THAC0/Attack Bonus
     $("#stat-block .thac0").text(mon2.thac0.toString());
     if (mon2.attack_bonus >= 0) {
         $("#stat-block .asc_ab").text("+" + mon2.attack_bonus.toString());
     } else { $("#stat-block .asc_ab").text(mon2.attack_bonus.toString()); }
 
+    // Speed
     $("#stat-block .round_speed").text(mon2.round_speed.toString());
     $("#stat-block .turn_speed").text(mon2.speed.toString());
     
@@ -214,6 +227,22 @@ var FormFunctions = {
         }
     },
 
+    // Custom HP
+    ChangeHD: function() {
+        $("#custom_hd_check").prop("checked") ? mon2.custom_hp.checked = true : mon2.custom_hp.checked = false;
+        if (mon2.custom_hp.checked) {
+            $(".hit_dice_normal").hide();
+            $(".hit_dice_custom").show();
+        } else {
+            $(".hit_dice_normal").show();
+            $(".hit_dice_custom").hide();
+        }
+        if (mon2.custom_hp.value == "") {
+            mon2.custom_hp.value = mon2.hit_dice.toString() + " (" + mon2.hit_points.toString() + "hp)";
+        }
+        $("#custom_hit_dice_input").val(mon2.custom_hp.value);
+    },
+
     // Set the forms
     SetForms: function () {
         // Name and type
@@ -228,6 +257,9 @@ var FormFunctions = {
 
         // Stats
         $("#hit_dice_input").val(mon2.hit_dice);
+        $("#custom_hd_check").prop("checked", mon2.custom_hp.checked);
+        $("#custom_hit_dice_input").val(mon2.custom_hp.value);
+        this.ChangeHD();
         $("#thac0_input").val(mon2.thac0);
         $("#attack_bonus_input").val(mon2.attack_bonus);
         $("#attacks_input").val(mon2.attacks);
@@ -381,11 +413,17 @@ var GetVariablesFunctions = {
         GetVariablesFunctions.GetAC();
         this.CalcAC(mon2.ac_type);
 
-        // Stats
+        // Hit Dice
         mon2.hit_dice = $("#hit_dice_input").val().trim();
         mon2.hit_points = Math.floor(mon2.hit_dice * 4.5);
+        mon2.custom_hp.checked = $("#custom_hd_check").prop("checked");
+        mon2.custom_hp.value = $("#custom_hit_dice_input").val().trim();
+
+        // THAC0/Attack Bonus
         GetVariablesFunctions.GetTHAC0();
         this.CalcTHAC0(mon2.ac_type);
+
+        // Speed
         mon2.speed = $("#speed_input").val().trim();
         this.CalcSpeed();
 
@@ -416,8 +454,15 @@ var GetVariablesFunctions = {
         mon2.asc_ac = parseInt($(".asc_ac").text().trim());
 
         // Stats
-        mon2.hit_dice = parseInt($(".hit_dice").text().trim());
-        mon2.hit_points = Math.floor(mon2.hit_dice * 4.5);
+        const hit_dice_field = $(".hit_dice_field");
+        if (!mon2.custom_hp.checked) {
+            mon2.hit_dice = parseInt($(".hit_dice").text().trim());
+            mon2.hit_points = Math.floor(mon2.hit_dice * 4.5);
+        } else {
+            mon2.custom_hp.value = hit_dice_field.text().trim();
+        }
+
+        // THAC0/Attack Bonus
         mon2.attacks = $(".attacks").text().trim();
         mon2.thac0 = parseInt($(".thac0").text().trim());
         mon2.attack_bonus = parseInt($(".asc_ab").text().trim().slice(1));

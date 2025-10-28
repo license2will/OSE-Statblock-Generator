@@ -94,7 +94,7 @@
                         <!-- stats -->
                         <div class="stats">
                             <span class="stat_title ac_title">AC</span> <span class="desc_ac ac_statblock">7</span><span class="asc_ac_wrapper ac_statblock"> [<span class="asc_ac">12</span>]</span>,
-                            <span class="stat_title hit_dice_title">HD</span> <span class="hit_dice">2</span> (<span class="hit_points">9hp</span>),
+                            <span class="stat_title hit_dice_title">HD</span> <span class="hit_dice_field"><span class="hit_dice">2</span> (<span class="hit_points">9hp</span>)</span>,
                             <span class="stat_title attacks_title">Att</span> <span class="attacks">1 x bite (1)</span>,
                             <span class="stat_title thac0_title">THAC0</span> <span class="thac0">18</span><span class="asc_ab_wrapper"> [<span class="asc_ab">+1</span>]</span>,
                             <span class="stat_title speed_title">MV</span> <span class="speed_wrapper"><span class="round_speed">150</span>' (<span class="turn_speed">50</span>')</span>,
@@ -178,10 +178,18 @@
 
                             <!-- hit dice -->
                             <td>
-                                <label for="hit_dice_input">
+                                <div class="hit_dice_normal"><label for="hit_dice_input">
                                     Hit Dice: <br>
                                     <input type="number" id="hit_dice_input" min="0" max="99" value="1">
-                                </label>
+                                </label></div>
+                                <div class="hit_dice_custom"><label for="custom_hit_dice_input">
+                                    Hit Dice/Hit Points: <br>
+                                    <input type="text" id="custom_hit_dice_input" style="width:70%" class="short_text">
+                                </label></div>
+                                <div><label for="custom_hd_check" class="box-note">
+                                    (Custom hit dice/hp:
+                                    <input type="checkbox" id="custom_hd_check" onchange="FormFunctions.ChangeHD()">)
+                                </label></div>
                             </td>
 
                             <!-- attacks -->
