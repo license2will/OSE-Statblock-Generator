@@ -4,7 +4,7 @@ A statblock generator for Old School Essentials.
 
 Build on Tetra-Cube's wonderful 5E statblock generator, available [here](https://tetra-cube.com/dnd/dnd-statblock.html).
 
-## Access the Bear Reskinner [here](/OSE-Statblock-Generator/bear-reskinner.html)
+# Access the Bear Reskinner [HERE](https://license2will.github.io/OSE-Statblock-Generator/bear-reskinner.html)
 
 #### How to use:
 
