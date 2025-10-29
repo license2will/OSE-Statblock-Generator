@@ -61,6 +61,7 @@
                     Generator</a> - <b>Statblock Generator</b></div> -->
             <br>
             <h1 id="testheader">The Bear Re-Skinner – OSE Statblock Generator</h1>
+            <h2><a href="https://talesofthegrotesqueanddungeonesque.blogspot.com/2016/08/just-use-bears.html">Just Use Bears.</a></h2>
             <p>Based on <a href="https://tetra-cube.com/dnd/dnd-statblock.html">Tetra-Cube's 5e Statblock Generator</a></p>
             <br>
             <button onclick="TrySaveFile()">Save Statblock</button>
@@ -262,7 +263,7 @@
                             </td>
                             <td>
                                 <label for="saves_as_input">Save as: <br>
-                                    <select id="saves_as_input">
+                                    <select id="saves_as_input" onchange="FormFunctions.CustomSavesAs()">
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
@@ -285,7 +286,9 @@
                                         <option value="20">20</option>
                                         <option value="21">21</option>
                                         <option value="22">22+</option>
+                                        <option value="other">Other</option>
                                     </select>  
+                                    <br><input type="text" id="other_saves_as_input" style="width:60%;">
                                 </label>
                             </td>
                         </tr>

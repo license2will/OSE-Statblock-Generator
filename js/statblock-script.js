@@ -96,13 +96,14 @@ let mon2 = {
     attack_bonus: 1,
     round_speed: 150,
     speed: 50,
+    custom_saves_as: false,
     saves: {
         death: "D12",
         wands: "W13",
         paralysis: "P14",
         breath: "B15",
         spells: "S16",
-        saves_as: 1
+        saves_as: "1"
     },
     morale: 7, //editable
     alignment: "Neutral",
@@ -262,6 +263,18 @@ var FormFunctions = {
         $("#custom_alignment_input").val(mon2.custom_alignment.value);
     },
 
+    CustomSavesAs: function() {
+        if ($("#saves_as_input").val() == "other") {
+            $("#other_saves_as_input").show();
+            mon2.custom_saves_as = true;
+        }
+        else {
+            $("#other_saves_as_input").hide();
+            mon2.custom_saves_as = false;
+        }
+
+    },
+
     // Set the forms
     SetForms: function () {
         // Name and type
@@ -291,7 +304,11 @@ var FormFunctions = {
         $("#paralysis_input").val(mon2.saves.paralysis.slice(1));
         $("#breath_input").val(mon2.saves.breath.slice(1));
         $("#spells_input").val(mon2.saves.spells.slice(1));
-        $("#saves_as_input").val(mon2.saves.saves_as);
+        if (mon2.custom_saves_as !== undefined && mon2.custom_saves_as == true) {
+            $("#saves_as_input").val("other");
+            $("#other_saves_as_input").val(mon2.saves.saves_as);
+        } else { $("#saves_as_input").val(mon2.saves.saves_as); }
+        this.CustomSavesAs();
 
         // remaining stats
         $("#morale_input").val(mon2.morale);
@@ -324,6 +341,7 @@ var FormFunctions = {
         // $("#hit_dice_input").html(dropdownBuffer.join(""));
 
         // $(".hidden_on_load").hide()
+        FormFunctions.CustomSavesAs();
         if (mon2.abilities.ability_list.length == 0) {
             $("#sort_abilities").hide();
         }
@@ -484,7 +502,8 @@ var GetVariablesFunctions = {
         mon2.saves.paralysis = "P" + $("#paralysis_input").val().trim();
         mon2.saves.breath = "B" + $("#breath_input").val().trim();
         mon2.saves.spells = "S" + $("#spells_input").val().trim();
-        mon2.saves.saves_as = $("#saves_as_input").val().trim();
+        mon2.custom_saves_as = ($("#saves_as_input").val() == "other");
+        mon2.saves.saves_as = mon2.custom_saves_as ? $("#other_saves_as_input").val().trim() : $("#saves_as_input").val().trim();
 
         // remaining stats
         mon2.morale = $("#morale_input").val().trim();
@@ -532,7 +551,9 @@ var GetVariablesFunctions = {
         mon2.saves.paralysis = $(".paralysis_save").text().trim()
         mon2.saves.breath = $(".breath_save").text().trim()
         mon2.saves.spells = $(".spells_save").text().trim()
-        mon2.saves.saves_as = $(".saves_as").text().trim()[1];
+
+        mon2.custom_saves_as = true;
+        mon2.saves.saves_as = $(".saves_as").text().trim().slice(1, -1);
 
         // remaining stats
         mon2.morale = $(".morale").text().trim();
@@ -674,14 +695,20 @@ $(function () {
                         {name: "HD 19+ to 21", value:"hd21"},
                         {name: "HD 21+", value:"hd22"},
                         {name: "", value:""},
-                        {name: "Camel", value:"camel"},
-                        {name: "Acolyte (1HD)", value:"acolyte"}
+                        {name: "Acolyte (1HD)", value:"acolyte"},
+                        {name: "Bandit (1HD)", value:"bandit"},
+                        {name: "Basilisk (6+1**HD)", value:"basilisk"},
+                        {name: "Black Bear (4HD)", value:"black bear"},
+                        {name: "Camel (2HD)", value:"camel"},
+                        {name: "Cave Bear (7HD)", value:"cave bear"},
+                        {name: "Grizzly Bear (5HD)", value:"grizzly bear"},
+                        {name: "Polar Bear (6HD)", value:"polar bear"}
                         ]
     $.each(listOptions, function (index, option) {
         monsterSelect.append("<option value='" + option.value + "'>" + option.name + "</option>");
     });
 
-    $.getJSON("js/JSON/monster.json", function (json) {
+    $.getJSON("js/JSON/black bear.json", function (json) {
         console.log(typeof(json) + " " + JSON.stringify(json));
         SavedData.LoadFromData(json);
         defaultPreset = json;

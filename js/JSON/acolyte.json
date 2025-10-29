@@ -1,1 +1,44 @@
-{"abilities":{"ability_list":[{"name":"Leader","description":"Groups of 4+ are led by a higher level cleric (1d10: 1–4: 2nd level, 5–7: 3rd level, 8–9: 4th level, 10: 5th level). Choose or roll the leader’s spells."}]},"ac_type":"both","alignment":"Neutral","asc_ac":17,"attack_bonus":0,"attacks":"1 x mace (1d6)","desc_ac":2,"description":"1st level clerics on a quest for their deity.","hit_dice":"1","hit_points":4,"custom_hp":{"checked":true,"value":"1 (4hp)"},"morale":"7","name":"Acolyte","number_appearing":"1d8 (1d20)","round_speed":60,"saves":{"breath":"B16","death":"D11","paralysis":"P14","saves_as":"1","spells":"S15","wands":"W12"},"speed":"20","thac0":19,"treasureType":"U","xP":"10","custom_alignment":{"checked":true,"value":"Any"}}
+{
+    "abilities": {
+        "ability_list": [
+            {
+                "name": "Leader",
+                "description": "Groups of 4+ are led by a higher level cleric (1d10: 1–4: 2nd level, 5–7: 3rd level, 8–9: 4th level, 10: 5th level). Choose or roll the leader’s spells."
+            }
+        ]
+    },
+    "ac_type": "both",
+    "alignment": "Neutral",
+    "asc_ac": 17,
+    "attack_bonus": 0,
+    "attacks": "1 x mace (1d6)",
+    "desc_ac": 2,
+    "description": "1st level clerics on a quest for their deity.",
+    "hit_dice": "1",
+    "hit_points": 4,
+    "custom_hp": {
+        "checked": true,
+        "value": "1 (4hp)"
+    },
+    "morale": "7",
+    "name": "Acolyte",
+    "number_appearing": "1d8 (1d20)",
+    "round_speed": 60,
+    "custom_saves_as": true,
+    "saves": {
+        "breath": "B16",
+        "death": "D11",
+        "paralysis": "P14",
+        "saves_as": "Cleric 1",
+        "spells": "S15",
+        "wands": "W12"
+    },
+    "speed": "20",
+    "thac0": 19,
+    "treasureType": "U",
+    "xP": "10",
+    "custom_alignment": {
+        "checked": true,
+        "value": "Any"
+    }
+}
