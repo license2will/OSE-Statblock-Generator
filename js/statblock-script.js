@@ -1,10 +1,13 @@
 let defaultPreset;
 
+// Ability List class – handles all monster special abilities
 class AbilityList {
     constructor() {
+        // List of abilities in format {name: "", description: ""}
         this.ability_list = [];
     }
 
+    // Add an ability to the ability list; if replace is true, will replace existing ability with same name
     addAbility(name, description, replace=false) {
         name = name.trim();
         description = description.trim();
@@ -30,6 +33,7 @@ class AbilityList {
         this.ability_list.push({name: name, description: description});
     }
 
+    // convert the list to a string
     toString() {
         let result = "";
         for (let i = 0; i < this.ability_list.length; i++) {
@@ -42,6 +46,7 @@ class AbilityList {
         return result.trim();
     }
 
+    // Sort the list but put empty names last
     sort() {
         this.ability_list.sort((a, b) => {
             if (!(a.name == "" || b.name == "")) {
@@ -57,6 +62,8 @@ class AbilityList {
         });
     }
 
+    // Rmove an item from the list; can either remove any item with the given name, or match both name and description, 
+    // or just description if name is empty
     removeItem(name, descr = null) {
         if (name == "" && descr != null) {
             this.ability_list = this.ability_list.filter(ability => !(ability.name == "" && ability.description == descr));
@@ -71,18 +78,21 @@ class AbilityList {
         this.ability_list = this.ability_list.filter(ability => ability.name !== name);
     }
 
+    // Remove item at index given
     removeIndex(index) {
         if (index >= 0 && index < this.ability_list.length) {
             this.ability_list.splice(index, 1);
         }
     }
 
+    // Insert item at index given
     insertItem(ability, index) {
         this.ability_list.splice(index, 0, ability);
     }
 }
 
-let mon2 = {
+// JavaScript object to hold monster data; equivalent to json files
+let mon = {
     name: "Monster2", 
     description: "A monster.",
     ac_type: "desc",
@@ -105,7 +115,7 @@ let mon2 = {
         spells: "S16",
         saves_as: "1"
     },
-    morale: 7, //editable
+    morale: 7, 
     alignment: "Neutral",
     custom_alignment: {checked: false, value: ""},
     xP: 20,
@@ -113,8 +123,6 @@ let mon2 = {
     treasureType: "None",
     abilities: new AbilityList()
 }
-
-// dice interpretation
 
 // Update the main stat block from form variables
 function UpdateBlockFromVariables() {
@@ -128,56 +136,56 @@ function UpdateStatblock() {
     SavedData.SaveToLocalStorage();
 
     // Name and description
-    $("#stat-block .monster_name").html(StringFunctions.RemoveHtmlTags(mon2.name));
-    $("#stat-block .description").html(StringFunctions.RemoveHtmlTags(mon2.description));
+    $("#stat-block .monster_name").html(StringFunctions.RemoveHtmlTags(mon.name));
+    $("#stat-block .description").html(StringFunctions.RemoveHtmlTags(mon.description));
     
     // Stats
-    $("#stat-block .desc_ac").text(mon2.desc_ac.toString());
-    $("#stat-block .asc_ac").text(mon2.asc_ac.toString());
+    $("#stat-block .desc_ac").text(mon.desc_ac.toString());
+    $("#stat-block .asc_ac").text(mon.asc_ac.toString());
 
     // Hit Dice/HP
     const hit_dice_field = $(".hit_dice_field");
     hit_dice_field.html("<span class=\"hit_dice\"></span> (<span class=\"hit_points\"></span>)</span>")
-    if (!mon2.custom_hp.checked) {
-        $("#stat-block .hit_dice").text(mon2.hit_dice.toString());
-        $("#stat-block .hit_points").text(mon2.hit_points.toString() + "hp");
+    if (!mon.custom_hp.checked) {
+        $("#stat-block .hit_dice").text(mon.hit_dice.toString());
+        $("#stat-block .hit_points").text(mon.hit_points.toString() + "hp");
     } else {
-        hit_dice_field.html(mon2.custom_hp.value);
+        hit_dice_field.html(mon.custom_hp.value);
     }
 
     // Attacks
-    $("#stat-block .attacks").html(StringFunctions.FormatString(mon2.attacks));
+    $("#stat-block .attacks").html(StringFunctions.FormatString(mon.attacks));
 
     // THAC0/Attack Bonus
-    $("#stat-block .thac0").text(mon2.thac0.toString());
-    if (mon2.attack_bonus >= 0) {
-        $("#stat-block .asc_ab").text("+" + mon2.attack_bonus.toString());
-    } else { $("#stat-block .asc_ab").text(mon2.attack_bonus.toString()); }
+    $("#stat-block .thac0").text(mon.thac0.toString());
+    if (mon.attack_bonus >= 0) {
+        $("#stat-block .asc_ab").text("+" + mon.attack_bonus.toString());
+    } else { $("#stat-block .asc_ab").text(mon.attack_bonus.toString()); }
 
     // Speed
-    $("#stat-block .round_speed").text(mon2.round_speed.toString());
-    $("#stat-block .turn_speed").text(mon2.speed.toString());
+    $("#stat-block .round_speed").text(mon.round_speed.toString());
+    $("#stat-block .turn_speed").text(mon.speed.toString());
     
     // saves
-    $("#stat-block .saves .death_save").text(mon2.saves.death);
-    $("#stat-block .saves .wands_save").text(mon2.saves.wands);
-    $("#stat-block .saves .paralysis_save").text(mon2.saves.paralysis);
-    $("#stat-block .saves .breath_save").text(mon2.saves.breath);
-    $("#stat-block .saves .spells_save").text(mon2.saves.spells);
-    $("#stat-block .saves .saves_as").text("(" + mon2.saves.saves_as.toString() + ")");
+    $("#stat-block .saves .death_save").text(mon.saves.death);
+    $("#stat-block .saves .wands_save").text(mon.saves.wands);
+    $("#stat-block .saves .paralysis_save").text(mon.saves.paralysis);
+    $("#stat-block .saves .breath_save").text(mon.saves.breath);
+    $("#stat-block .saves .spells_save").text(mon.saves.spells);
+    $("#stat-block .saves .saves_as").text("(" + mon.saves.saves_as.toString() + ")");
     
     // remaining stats
-    $("#stat-block .morale").text(mon2.morale.toString());
+    $("#stat-block .morale").text(mon.morale.toString());
 
     // Alignment
-    if (mon2.custom_alignment == undefined) {
-        mon2.custom_alignment = {checked: false, value: ""};
+    if (mon.custom_alignment == undefined) {
+        mon.custom_alignment = {checked: false, value: ""};
     }
-    $("#stat-block .alignment").text((mon2.custom_alignment.checked == false ? mon2.alignment.toString() : mon2.custom_alignment.value.toString()));
+    $("#stat-block .alignment").text((mon.custom_alignment.checked == false ? mon.alignment.toString() : mon.custom_alignment.value.toString()));
 
-    $("#stat-block .xp").text(mon2.xP.toString());
-    $("#stat-block .number_appearing").text(mon2.number_appearing.toString());
-    $("#stat-block .treasure_type").text(mon2.treasureType.toString());
+    $("#stat-block .xp").text(mon.xP.toString());
+    $("#stat-block .number_appearing").text(mon.number_appearing.toString());
+    $("#stat-block .treasure_type").text(mon.treasureType.toString());
     
     // display all abilites
     const abilities_list = $("#stat-block .abilities_list ul");
@@ -188,25 +196,26 @@ function UpdateStatblock() {
 var FormFunctions = {
     // Change from Ascending to Descending AC, or vice versa
     ChangeAC: function() {
-        const old_ac = mon2.ac_type;
+        const old_ac = mon.ac_type;
         GetVariablesFunctions.GetAC();
         GetVariablesFunctions.CalcAC(old_ac);
         GetVariablesFunctions.GetTHAC0();
-        console.log("mon2.thac0 " + mon2.thac0 + " mon2.attack_bonus " + mon2.attack_bonus);
+        console.log("mon.thac0 " + mon.thac0 + " mon.attack_bonus " + mon.attack_bonus);
         GetVariablesFunctions.CalcTHAC0(old_ac);
-        console.log("mon2.thac0 " + mon2.thac0 + " mon2.attack_bonus " + mon2.attack_bonus);
-        $('#asc_ac_input').val(mon2.asc_ac);
-        $('#desc_ac_input').val(mon2.desc_ac);
-        $('#thac0_input').val(mon2.thac0);
-        $('#attack_bonus_input').val(mon2.attack_bonus);
+        console.log("mon.thac0 " + mon.thac0 + " mon.attack_bonus " + mon.attack_bonus);
+        $('#asc_ac_input').val(mon.asc_ac);
+        $('#desc_ac_input').val(mon.desc_ac);
+        $('#thac0_input').val(mon.thac0);
+        $('#attack_bonus_input').val(mon.attack_bonus);
         this.ShowHideAscendAC();
         UpdateBlockFromVariables();
     },
 
     // Show or hide between Ascending, Descending or Both AC
     ShowHideAscendAC: function () {
+        //Form
         $(".ac_prompt").show();
-        switch (mon2.ac_type) {
+        switch (mon.ac_type) {
             case "asc":
                 $(".desc_ac_input_prompt").hide();
                 break;
@@ -215,18 +224,17 @@ var FormFunctions = {
                 $(".asc_ac_input_prompt").hide();
                 break;
         }
-        // stat block
-        // hide both ac types
+        // Stat block
         $("#stat-block .ac_statblock, #stat-block .thac0, #stat-block .asc_ab_wrapper").hide();
-        if (mon2.ac_type == "asc") {
+        if (mon.ac_type == "asc") {
             $("#stat-block .asc_ac_wrapper").html("<span class=\"asc_ac ac_statblock\">12</span>").show();
             $("#stat-block .asc_ab_wrapper").html("<span class=\"asc_ab\">+1</span>").show();
             $("#stat-block .thac0_title").text("AB");
-        } else if (mon2.ac_type == "desc") {
+        } else if (mon.ac_type == "desc") {
             $("#stat-block .desc_ac").show();
             $("#stat-block .thac0").show();
             $("#stat-block .thac0_title").text("THAC0");
-        } else if (mon2.ac_type == "both") {
+        } else if (mon.ac_type == "both") {
             $("#stat-block .thac0_title").text("THAC0");
             $("#stat-block .asc_ac_wrapper").html(" [<span class=\"asc_ac ac_statblock\">12</span>]");
             $("#stat-block .asc_ab_wrapper").html(" [<span class=\"asc_ab\">+1</span>]");
@@ -234,115 +242,104 @@ var FormFunctions = {
         }
     },
 
-    // Custom HP
+    // Show/hide the custom HD input, and set the values
     ChangeHD: function() {
-        $("#custom_hd_check").prop("checked") ? mon2.custom_hp.checked = true : mon2.custom_hp.checked = false;
-        if (mon2.custom_hp.checked) {
+        $("#custom_hd_check").prop("checked") ? mon.custom_hp.checked = true : mon.custom_hp.checked = false;
+        if (mon.custom_hp.checked) {
             $(".hit_dice_normal").hide();
             $(".hit_dice_custom").show();
         } else {
             $(".hit_dice_normal").show();
             $(".hit_dice_custom").hide();
         }
-        if (mon2.custom_hp.value == "") {
-            mon2.custom_hp.value = mon2.hit_dice.toString() + " (" + mon2.hit_points.toString() + "hp)";
+        if (mon.custom_hp.value == "") {
+            mon.custom_hp.value = mon.hit_dice.toString() + " (" + mon.hit_points.toString() + "hp)";
         }
-        $("#custom_hit_dice_input").val(mon2.custom_hp.value);
+        $("#custom_hit_dice_input").val(mon.custom_hp.value);
     },
 
-    // Custom Alignment
+    // Show/hide the custom alignment input, and set the values
     ChangeCustomAlignment: function() {
-        $("#custom_alignment_check").prop("checked") ? mon2.custom_alignment.checked = true : mon2.custom_alignment.checked = false;
-        if (mon2.custom_alignment.checked) {
+        $("#custom_alignment_check").prop("checked") ? mon.custom_alignment.checked = true : mon.custom_alignment.checked = false;
+        if (mon.custom_alignment.checked) {
             $(".alignment_select").hide();
             $(".alignment_custom").show();
         } else {
             $(".alignment_select").show();
             $(".alignment_custom").hide();
         }
-        $("#custom_alignment_input").val(mon2.custom_alignment.value);
+        $("#custom_alignment_input").val(mon.custom_alignment.value);
     },
 
+    // Show/hide the custom 'saves as' input
     CustomSavesAs: function() {
         if ($("#saves_as_input").val() == "other") {
             $("#other_saves_as_input").show();
-            mon2.custom_saves_as = true;
+            mon.custom_saves_as = true;
         }
         else {
             $("#other_saves_as_input").hide();
-            mon2.custom_saves_as = false;
+            mon.custom_saves_as = false;
         }
 
     },
 
-    // Set the forms
+    // Set the form values from the monster object
     SetForms: function () {
         // Name and type
-        $("#name-input").val(mon2.name);
-        $("#monster_descr_input").val(mon2.description);
+        $("#name-input").val(mon.name);
+        $("#monster_descr_input").val(mon.description);
         
         // AC
-        $("#asc_ac_input").val(mon2.asc_ac);
-        $("#desc_ac_input").val(mon2.desc_ac);
-        $("#" + mon2.ac_type + "_armor_choice_input").prop('checked', true);
+        $("#asc_ac_input").val(mon.asc_ac);
+        $("#desc_ac_input").val(mon.desc_ac);
+        $("#" + mon.ac_type + "_armor_choice_input").prop('checked', true);
         this.ShowHideAscendAC();
 
         // Stats
-        $("#hit_dice_input").val(mon2.hit_dice);
-        $("#custom_hd_check").prop("checked", mon2.custom_hp.checked);
-        $("#custom_hit_dice_input").val(mon2.custom_hp.value);
+        $("#hit_dice_input").val(mon.hit_dice);
+        $("#custom_hd_check").prop("checked", mon.custom_hp.checked);
+        $("#custom_hit_dice_input").val(mon.custom_hp.value);
         this.ChangeHD();
 
-        $("#thac0_input").val(mon2.thac0);
-        $("#attack_bonus_input").val(mon2.attack_bonus);
-        $("#attacks_input").val(mon2.attacks);
-        $("#speed_input").val(mon2.speed);
+        $("#thac0_input").val(mon.thac0);
+        $("#attack_bonus_input").val(mon.attack_bonus);
+        $("#attacks_input").val(mon.attacks);
+        $("#speed_input").val(mon.speed);
 
         // Saves
-        $("#death_input").val(mon2.saves.death.slice(1));
-        $("#wands_input").val(mon2.saves.wands.slice(1));
-        $("#paralysis_input").val(mon2.saves.paralysis.slice(1));
-        $("#breath_input").val(mon2.saves.breath.slice(1));
-        $("#spells_input").val(mon2.saves.spells.slice(1));
-        if (mon2.custom_saves_as !== undefined && mon2.custom_saves_as == true) {
+        $("#death_input").val(mon.saves.death.slice(1));
+        $("#wands_input").val(mon.saves.wands.slice(1));
+        $("#paralysis_input").val(mon.saves.paralysis.slice(1));
+        $("#breath_input").val(mon.saves.breath.slice(1));
+        $("#spells_input").val(mon.saves.spells.slice(1));
+        if (mon.custom_saves_as !== undefined && mon.custom_saves_as == true) {
             $("#saves_as_input").val("other");
-            $("#other_saves_as_input").val(mon2.saves.saves_as);
-        } else { $("#saves_as_input").val(mon2.saves.saves_as); }
+            $("#other_saves_as_input").val(mon.saves.saves_as);
+        } else { $("#saves_as_input").val(mon.saves.saves_as); }
         this.CustomSavesAs();
 
         // remaining stats
-        $("#morale_input").val(mon2.morale);
+        $("#morale_input").val(mon.morale);
 
-        if (mon2.custom_alignment == undefined) {
-            mon2.custom_alignment = {checked: false, value: ""};
+        if (mon.custom_alignment == undefined) {
+            mon.custom_alignment = {checked: false, value: ""};
         }
-        $("#custom_alignment_check").prop("checked", mon2.custom_alignment.checked);
-        $("#alignment_select").val(mon2.alignment);
-        $("#custom_alignment_input").val(mon2.custom_alignment.value);
+        $("#custom_alignment_check").prop("checked", mon.custom_alignment.checked);
+        $("#alignment_select").val(mon.alignment);
+        $("#custom_alignment_input").val(mon.custom_alignment.value);
         this.ChangeCustomAlignment();
 
 
-        $("#xp_input").val(mon2.xP);
-        $("#num_appearing_input").val(mon2.number_appearing);
-        $("#treasure_type_input").val(mon2.treasureType);
+        $("#xp_input").val(mon.xP);
+        $("#num_appearing_input").val(mon.number_appearing);
+        $("#treasure_type_input").val(mon.treasureType);
     },
 
     // Initialize Forms
     InitForms: function () {
-        // let dropdownBuffer = [
-        //     "<option value=*>Hit Dice</option>",
-        //     "<option value=0>0 (", data.crs["0"].xp, " XP)</option>",
-        //     "<option value=1/8>1/8 (", data.crs["1/8"].xp, " XP)</option>",
-        //     "<option value=1/4>1/4 (", data.crs["1/4"].xp, " XP)</option>",
-        //     "<option value=1/2>1/2 (", data.crs["1/2"].xp, " XP)</option>"
-        // ];
-        // for (let cr = 1; cr <= 30; cr++)
-        //     dropdownBuffer.push("<option value=", cr, ">", cr, " (", data.crs[cr].xp, " XP)</option>");
-        // $("#hit_dice_input").html(dropdownBuffer.join(""));
-
-        // $(".hidden_on_load").hide()
         FormFunctions.CustomSavesAs();
-        if (mon2.abilities.ability_list.length == 0) {
+        if (mon.abilities.ability_list.length == 0) {
             $("#sort_abilities").hide();
         }
     }
@@ -352,18 +349,19 @@ var FormFunctions = {
 var InputFunctions = {
     // Change Hit Dice based on input dropdown
     InputHitDice: function () {
-        mon2.hit_dice = $("#hit_dice_input").val();
+        mon.hit_dice = $("#hit_dice_input").val();
     },
 
+    // Add ability to ability list
     AddAbilityInput: function () {
         const name_input = $("#abilities_name_input");
         const descr_input = $("#abilities_descr_input");
 
-        // add ability to mon2.abilities
+        // add ability to mon.abilities
         const ability_name = name_input.val().trim();
         const ability_descr = descr_input.val().trim();
-        mon2.abilities.addAbility(ability_name, ability_descr);
-        console.log(mon2.abilities.toString());
+        mon.abilities.addAbility(ability_name, ability_descr);
+        console.log(mon.abilities.toString());
 
         // clear the ability input fields
         name_input.val("");
@@ -371,18 +369,20 @@ var InputFunctions = {
 
         // update the list of abilities shown
         this.UpdateAbilitiesList(); // also updates stat block
-        if (mon2.abilities.ability_list.length > 0) $("#sort_abilities").show();
+        if (mon.abilities.ability_list.length > 0) $("#sort_abilities").show();
     },
 
+    // Update display of ability list
     UpdateAbilitiesList: function() {
         const displayList = $("#abilities_list_display");
         InputFunctions.DisplayAbilitiesList(displayList, true);
         UpdateStatblock();
     },
 
+    // Display the special abilities in a list – polymorphic, can be used for stat block or form
     DisplayAbilitiesList: function(displayList, img = false) {
         let html = "";
-        mon2.abilities.ability_list.forEach((ability, index) => {
+        mon.abilities.ability_list.forEach((ability, index) => {
             const name = ability.name;
             const descr = ability.description;
             html += "<li>";
@@ -403,6 +403,7 @@ var InputFunctions = {
         displayList.html(html);
     },
 
+    // Helper function to insert edit, remove, copy, etc. buttons at the front of an ability entry
     AddEditButtons: function(index) {
         let imageHTML = "<img class='statblock-image' src='dndimages/x-icon.png' alt='Remove' title='Remove' onclick='InputFunctions.RemoveAbilityItem(" + index + ")'>";
         imageHTML += " <img class='statblock-image' src='dndimages/edit-icon.png' alt='Edit' title='Edit' onclick='InputFunctions.EditAbilityItem(" + index + ")'>" +
@@ -412,27 +413,31 @@ var InputFunctions = {
         return imageHTML;
     },
 
+    // Delete an ability
     RemoveAbilityItem: function(index) {
-        mon2.abilities.removeIndex(index);
+        mon.abilities.removeIndex(index);
         this.UpdateAbilitiesList();
-        if (mon2.abilities.ability_list.length == 0) $("#sort_abilities").hide();
+        if (mon.abilities.ability_list.length == 0) $("#sort_abilities").hide();
     },
 
+    // Edit an ability
     EditAbilityItem: function(index) {
-        const ability = mon2.abilities.ability_list[index];
+        const ability = mon.abilities.ability_list[index];
         $("#abilities_name_input").val(ability.name);
         $("#abilities_descr_input").val(ability.description);
         this.RemoveAbilityItem(index);
     },
 
+    // Duplicate abilities
     CopyAbilityItem: function(index) {
-        const ability = mon2.abilities.ability_list[index];
-        mon2.abilities.insertItem({name: ability.name, description: ability.description}, index + 1);
+        const ability = mon.abilities.ability_list[index];
+        mon.abilities.insertItem({name: ability.name, description: ability.description}, index + 1);
         this.UpdateAbilitiesList();
     },
 
+    // Array function to swap abilities in the ability list
     SwapAbilityItem: function(index, direction) {
-        const arr = mon2.abilities.ability_list;
+        const arr = mon.abilities.ability_list;
         const new_index = index + direction;
         if (new_index < 0 || new_index >= arr.length) return;
         let old = arr[new_index];
@@ -441,11 +446,13 @@ var InputFunctions = {
         this.UpdateAbilitiesList();
     },
 
+    // Sort list of abilities
     SortAbilityList: function() {
-        mon2.abilities.sort();
+        mon.abilities.sort();
         this.UpdateAbilitiesList();
     },
 
+    // Select which preset to load
     GetPreset: function () {
         let name = $("#monster-select").val();
         if (name == "") return;
@@ -472,167 +479,167 @@ var GetVariablesFunctions = {
     // Get all Variables from forms
     GetAllVariables: function () {
         // Name and Description
-        mon2.name = $("#name-input").val().trim();
-        mon2.description = $("#monster_descr_input").val().trim();
+        mon.name = $("#name-input").val().trim();
+        mon.description = $("#monster_descr_input").val().trim();
 
         // Armor Class
         GetVariablesFunctions.GetAC();
-        this.CalcAC(mon2.ac_type);
+        this.CalcAC(mon.ac_type);
 
         // Hit Dice
-        mon2.hit_dice = $("#hit_dice_input").val().trim();
-        mon2.hit_points = Math.floor(mon2.hit_dice * 4.5);
-        mon2.custom_hp.checked = $("#custom_hd_check").prop("checked");
-        mon2.custom_hp.value = $("#custom_hit_dice_input").val().trim();
+        mon.hit_dice = $("#hit_dice_input").val().trim();
+        mon.hit_points = Math.floor(mon.hit_dice * 4.5);
+        mon.custom_hp.checked = $("#custom_hd_check").prop("checked");
+        mon.custom_hp.value = $("#custom_hit_dice_input").val().trim();
 
         // Attacks
-        mon2.attacks = $("#attacks_input").val().trim();
+        mon.attacks = $("#attacks_input").val().trim();
 
         // THAC0/Attack Bonus
         GetVariablesFunctions.GetTHAC0();
-        this.CalcTHAC0(mon2.ac_type);
+        this.CalcTHAC0(mon.ac_type);
 
         // Speed
-        mon2.speed = $("#speed_input").val().trim();
+        mon.speed = $("#speed_input").val().trim();
         this.CalcSpeed();
 
         // Saves
-        mon2.saves.death = "D" + $("#death_input").val().trim();
-        mon2.saves.wands = "W" + $("#wands_input").val().trim();
-        mon2.saves.paralysis = "P" + $("#paralysis_input").val().trim();
-        mon2.saves.breath = "B" + $("#breath_input").val().trim();
-        mon2.saves.spells = "S" + $("#spells_input").val().trim();
-        mon2.custom_saves_as = ($("#saves_as_input").val() == "other");
-        mon2.saves.saves_as = mon2.custom_saves_as ? $("#other_saves_as_input").val().trim() : $("#saves_as_input").val().trim();
+        mon.saves.death = "D" + $("#death_input").val().trim();
+        mon.saves.wands = "W" + $("#wands_input").val().trim();
+        mon.saves.paralysis = "P" + $("#paralysis_input").val().trim();
+        mon.saves.breath = "B" + $("#breath_input").val().trim();
+        mon.saves.spells = "S" + $("#spells_input").val().trim();
+        mon.custom_saves_as = ($("#saves_as_input").val() == "other");
+        mon.saves.saves_as = mon.custom_saves_as ? $("#other_saves_as_input").val().trim() : $("#saves_as_input").val().trim();
 
         // remaining stats
-        mon2.morale = $("#morale_input").val().trim();
+        mon.morale = $("#morale_input").val().trim();
 
         //Alignment
-        mon2.alignment = $("#alignment_select option:selected").text().trim();
-        mon2.custom_alignment.checked = $("#custom_alignment_check").prop("checked");
-        mon2.custom_alignment.value = $("#custom_alignment_input").val().trim();
+        mon.alignment = $("#alignment_select option:selected").text().trim();
+        mon.custom_alignment.checked = $("#custom_alignment_check").prop("checked");
+        mon.custom_alignment.value = $("#custom_alignment_input").val().trim();
 
-        mon2.xP = $("#xp_input").val().trim();
-        mon2.number_appearing = $("#num_appearing_input").val().trim();
-        mon2.treasureType = $("#treasure_type_input").val().trim();
+        mon.xP = $("#xp_input").val().trim();
+        mon.number_appearing = $("#num_appearing_input").val().trim();
+        mon.treasureType = $("#treasure_type_input").val().trim();
     },
 
     // Get all Variables From Block
     GetVariablesFromBlock: function () {
         // Name and Description
-        mon2.name = $(".monster_name").text().trim();
-        mon2.description = $(".description").text().trim();
+        mon.name = $(".monster_name").text().trim();
+        mon.description = $(".description").text().trim();
 
         // Armor Class
-        mon2.desc_ac = parseInt($(".desc_ac").text().trim());
-        mon2.asc_ac = parseInt($(".asc_ac").text().trim());
+        mon.desc_ac = parseInt($(".desc_ac").text().trim());
+        mon.asc_ac = parseInt($(".asc_ac").text().trim());
 
         // Stats
         const hit_dice_field = $(".hit_dice_field");
-        if (!mon2.custom_hp.checked) {
-            mon2.hit_dice = parseInt($(".hit_dice").text().trim());
-            mon2.hit_points = Math.floor(mon2.hit_dice * 4.5);
+        if (!mon.custom_hp.checked) {
+            mon.hit_dice = parseInt($(".hit_dice").text().trim());
+            mon.hit_points = Math.floor(mon.hit_dice * 4.5);
         } else {
-            mon2.custom_hp.value = hit_dice_field.text().trim();
+            mon.custom_hp.value = hit_dice_field.text().trim();
         }
 
         // THAC0/Attack Bonus
-        mon2.attacks = $(".attacks").text().trim();
-        mon2.thac0 = parseInt($(".thac0").text().trim());
-        mon2.attack_bonus = parseInt($(".asc_ab").text().trim().slice(1));
-        this.CalcTHAC0(mon2.ac_type);
-        mon2.speed = parseInt($(".turn_speed").text().trim());
+        mon.attacks = $(".attacks").text().trim();
+        mon.thac0 = parseInt($(".thac0").text().trim());
+        mon.attack_bonus = parseInt($(".asc_ab").text().trim().slice(1));
+        this.CalcTHAC0(mon.ac_type);
+        mon.speed = parseInt($(".turn_speed").text().trim());
         this.CalcSpeed();
 
         // Saves
-        mon2.saves.death = $(".death_save").text().trim()
-        mon2.saves.wands = $(".wands_save").text().trim()
-        mon2.saves.paralysis = $(".paralysis_save").text().trim()
-        mon2.saves.breath = $(".breath_save").text().trim()
-        mon2.saves.spells = $(".spells_save").text().trim()
+        mon.saves.death = $(".death_save").text().trim()
+        mon.saves.wands = $(".wands_save").text().trim()
+        mon.saves.paralysis = $(".paralysis_save").text().trim()
+        mon.saves.breath = $(".breath_save").text().trim()
+        mon.saves.spells = $(".spells_save").text().trim()
 
-        mon2.custom_saves_as = true;
-        mon2.saves.saves_as = $(".saves_as").text().trim().slice(1, -1);
+        mon.custom_saves_as = true;
+        mon.saves.saves_as = $(".saves_as").text().trim().slice(1, -1);
 
         // remaining stats
-        mon2.morale = $(".morale").text().trim();
+        mon.morale = $(".morale").text().trim();
 
-        mon2.custom_alignment.value = $(".alignment").text().trim();
-        mon2.custom_alignment.checked = true;
+        mon.custom_alignment.value = $(".alignment").text().trim();
+        mon.custom_alignment.checked = true;
 
-        mon2.xP = $(".xp").text().trim();
-        mon2.number_appearing = $(".number_appearing").text().trim();
-        mon2.treasureType = $(".treasure_type").text().trim();
+        mon.xP = $(".xp").text().trim();
+        mon.number_appearing = $(".number_appearing").text().trim();
+        mon.treasureType = $(".treasure_type").text().trim();
 
         // abilities
-        mon2.abilities = new AbilityList();
+        mon.abilities = new AbilityList();
         $(".abilities_list ul").children().each(function (index) {
             let [name, description] = [$(this).find(".ability_title").text(), $(this).find(".ability_text").text()];
             if (name.trim().slice(-1) == ":") name = name.trim().slice(0, -1);
-            mon2.abilities.addAbility(name.trim(), description.trim());
+            mon.abilities.addAbility(name.trim(), description.trim());
         });
     },
 
     // Get AC
     GetAC: function() {
-        mon2.ac_type = $('input[name="armor_choice-input"]:checked').val().trim();
-        mon2.asc_ac = parseInt($("#asc_ac_input").val().trim());
-        mon2.desc_ac = parseInt($("#desc_ac_input").val().trim());
+        mon.ac_type = $('input[name="armor_choice-input"]:checked').val().trim();
+        mon.asc_ac = parseInt($("#asc_ac_input").val().trim());
+        mon.desc_ac = parseInt($("#desc_ac_input").val().trim());
     },
 
     // Get THAC0 and Attack Bonus
     GetTHAC0: function() {
-        mon2.ac_type = $('input[name="armor_choice-input"]:checked').val().trim();
-        mon2.thac0 = parseInt($("#thac0_input").val().trim());
-        mon2.attack_bonus = parseInt($("#attack_bonus_input").val().trim());
+        mon.ac_type = $('input[name="armor_choice-input"]:checked').val().trim();
+        mon.thac0 = parseInt($("#thac0_input").val().trim());
+        mon.attack_bonus = parseInt($("#attack_bonus_input").val().trim());
     },
 
     // Calculate Ascending/Descending AC
     CalcAC: function(base_type) {
-        const old_ac = (base_type == "asc") ? mon2.asc_ac : mon2.desc_ac;
+        const old_ac = (base_type == "asc") ? mon.asc_ac : mon.desc_ac;
         const new_ac = (19 - old_ac);
         if (base_type == "asc") {
-            mon2.desc_ac = new_ac;
+            mon.desc_ac = new_ac;
         } else {
-            mon2.asc_ac = new_ac;
+            mon.asc_ac = new_ac;
         }
         return new_ac;
     },
 
     // Calculate THAC0 and Attack Bonuses based on input type
     CalcTHAC0: function(base_type) {
-        const old_thac0 = (base_type == "asc") ? mon2.attack_bonus : mon2.thac0;
+        const old_thac0 = (base_type == "asc") ? mon.attack_bonus : mon.thac0;
         const new_thac0 = (19 - old_thac0);
         if (base_type == "asc") {
-            mon2.thac0 = new_thac0;
+            mon.thac0 = new_thac0;
         } else {
-            mon2.attack_bonus = new_thac0;
+            mon.attack_bonus = new_thac0;
         }
         return new_thac0;
     },
 
     CalcSpeed: function() {
-        mon2.round_speed = mon2.speed * 3;
+        mon.round_speed = mon.speed * 3;
     }
 }
 
 // Functions for saving/loading data
 var SavedData = {
     // Saving
-    SaveToLocalStorage: () => localStorage.setItem("SavedData", JSON.stringify(mon2)),
+    SaveToLocalStorage: () => localStorage.setItem("SavedData", JSON.stringify(mon)),
 
     // Save to file
-    SaveToFile: () => saveAs(new Blob([JSON.stringify(mon2)], {
+    SaveToFile: () => saveAs(new Blob([JSON.stringify(mon)], {
         type: "text/plain;charset=utf-8"
-    }), mon2.name.toLowerCase() + ".json"),
+    }), mon.name.toLowerCase() + ".json"),
 
     // Retrieve from cached storage
     RetrieveFromLocalStorage: function () {
         let savedData = localStorage.getItem("SavedData");
         if (savedData != undefined) {
-            mon2 = JSON.parse(savedData);
-            mon2.abilities = Object.assign(new AbilityList(), mon2.abilities);
+            mon = JSON.parse(savedData);
+            mon.abilities = Object.assign(new AbilityList(), mon.abilities);
             InputFunctions.UpdateAbilitiesList();
         }
     },
@@ -643,8 +650,8 @@ var SavedData = {
             reader = new FileReader();
 
         reader.onload = function (e) {
-            mon2 = JSON.parse(reader.result);
-            mon2.abilities = Object.assign(new AbilityList(), mon2.abilities);
+            mon = JSON.parse(reader.result);
+            mon.abilities = Object.assign(new AbilityList(), mon.abilities);
             InputFunctions.UpdateAbilitiesList();
             Populate();
         };
@@ -654,8 +661,8 @@ var SavedData = {
 
     // Load a monster from a JSON data object
     LoadFromData: function(JSONdata) {
-        mon2 = (JSONdata);
-        mon2.abilities = Object.assign(new AbilityList(), mon2.abilities);
+        mon = (JSONdata);
+        mon.abilities = Object.assign(new AbilityList(), mon.abilities);
         InputFunctions.UpdateAbilitiesList();
         Populate();
     }

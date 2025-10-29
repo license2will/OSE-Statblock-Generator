@@ -26,20 +26,22 @@ function TryPrint() {
 function TryImage() {
     const node = document.getElementById('stat-block');
     if (node != null) {
+        // Save to png
         htmlToImage
             .toBlob(node)
             .then(function (blob) {
                 if (window.saveAs) {
-                window.saveAs(blob, mon2.name.toLowerCase() + '.png');
+                window.saveAs(blob, mon.name.toLowerCase() + '.png');
                 } else {
                 FileSaver.saveAs(blob, 'monster.png');
             }
             });
+        // save to jpeg
         // htmlToImage
         //     .toJpeg(node, { quality: 0.95 })
         //     .then(function (dataUrl) {
         //         var link = document.createElement('a');
-        //         link.download = mon2.name.toLowerCase() + '.jpeg';
+        //         link.download = mon.name.toLowerCase() + '.jpeg';
         //         link.href = dataUrl;
         //         link.click();
         //     });
@@ -49,16 +51,17 @@ function TryImage() {
 // markdown export
 function TryMarkdown() {
     let markdownWindow = window.open();
-    let markdown = ['<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><title>', mon2.name, '</title><link rel="shortcut icon" type="image/x-icon" href="./dndimages/favicon.ico" /></head><body>'];
+    let markdown = ['<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><title>', mon.name, '</title><link rel="shortcut icon" type="image/x-icon" href="./dndimages/favicon.ico" /></head><body>'];
     
     markdown.push("<h1>Markdown Export</h1>");
-    markdown.push(BuildMarkdown_basic(mon2));
+    markdown.push(BuildMarkdown_basic(mon));
 
     markdown.push("</body></html>");
 
     markdownWindow.document.write(markdown.join(""));
 }
 
+// hard-coded markdown export
 function BuildMarkdown_basic(mon) {
     let markdown_lines = [];
 
@@ -96,39 +99,41 @@ function BuildMarkdown_basic(mon) {
     return ConvertMarkdownToHtmlString(markdown_lines);
 }
 
+// hard-coded converting of stats to markdown
 function ConvertStatsToMarkdown_basic(mon) {
     let string = "";
 
     const ac_type = mon.ac_type;
-    string += "**AC** " + ((ac_type == "asc") ? mon2.asc_ac : mon2.desc_ac );
-    string += (ac_type == "both") ? " [" + mon2.asc_ac + "], " : ", ";
-    string += "**HD** " + mon2.hit_dice + " (" + mon2.hit_points + "), ";
-    string += "**Att** " + mon2.attacks + ", ";
+    string += "**AC** " + ((ac_type == "asc") ? mon.asc_ac : mon.desc_ac );
+    string += (ac_type == "both") ? " [" + mon.asc_ac + "], " : ", ";
+    string += "**HD** " + mon.hit_dice + " (" + mon.hit_points + "), ";
+    string += "**Att** " + mon.attacks + ", ";
 
-    const attack_bonus = (mon2.attack_bonus >= 0 ? "+" : "") + mon2.attack_bonus;
+    const attack_bonus = (mon.attack_bonus >= 0 ? "+" : "") + mon.attack_bonus;
     if (ac_type == "asc") {
         string += "**AB** " + attack_bonus + ", ";
     }
     else {
-        string += "**THAC0** " + mon2.thac0 + ((ac_type == "both") ? " [" + attack_bonus + "], " : ", ");
+        string += "**THAC0** " + mon.thac0 + ((ac_type == "both") ? " [" + attack_bonus + "], " : ", ");
     }
 
-    string += "**MV** " + mon2.round_speed + "' (" + mon2.speed + "'), ";
-    string += "**SV** " + mon2.saves.death + " "
-                         + mon2.saves.wands + " "
-                         + mon2.saves.paralysis + " "
-                         + mon2.saves.breath + " "
-                         + mon2.saves.spells + " "
-                         + "(" + mon2.saves.saves_as + "), ";
-    string += "**ML** " + mon2.morale + ", ";
-    string += "**AL** " + mon2.alignment + ", ";
-    string += "**XP** " + mon2.xP + ", ";
-    string += "**NA** " + mon2.number_appearing + ", ";
-    string += "**TT** " + mon2.treasureType;
+    string += "**MV** " + mon.round_speed + "' (" + mon.speed + "'), ";
+    string += "**SV** " + mon.saves.death + " "
+                         + mon.saves.wands + " "
+                         + mon.saves.paralysis + " "
+                         + mon.saves.breath + " "
+                         + mon.saves.spells + " "
+                         + "(" + mon.saves.saves_as + "), ";
+    string += "**ML** " + mon.morale + ", ";
+    string += "**AL** " + mon.alignment + ", ";
+    string += "**XP** " + mon.xP + ", ";
+    string += "**NA** " + mon.number_appearing + ", ";
+    string += "**TT** " + mon.treasureType;
 
     return string;
 }
 
+// convert markdown lines to html string
 function ConvertMarkdownToHtmlString(markdownLines) {
     // Add line breaks and code tags
     let builtLines = [];

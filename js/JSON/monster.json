@@ -1,1 +1,39 @@
-{"abilities":{"ability_list":[{"name":"Ability","description":"Just a regular monstrous ability."}]},"ac_type":"both","alignment":"Neutral","asc_ac":10,"attack_bonus":0,"attacks":"1 x weapon (1d6 or by weapon)","desc_ac":9,"description":"A horrible monster.","hit_dice":"1","hit_points":4,"custom_hp":{"checked":false,"value":"2 (9hp)"},"morale":"7","name":"Monster","number_appearing":"1","round_speed":120,"saves":{"breath":"B15","death":"D12","paralysis":"P14","saves_as":"1","spells":"S16","wands":"W13"},"speed":"40","thac0":19,"treasureType":"T","xP":"10"}
+{
+    "abilities": {
+        "ability_list": [
+            {
+                "name": "Ability",
+                "description": "Just a regular monstrous ability."
+            }
+        ]
+    },
+    "ac_type": "both",
+    "alignment": "Neutral",
+    "asc_ac": 10,
+    "attack_bonus": 0,
+    "attacks": "1 x weapon (1d6 or by weapon)",
+    "desc_ac": 9,
+    "description": "A horrible monster.",
+    "hit_dice": "1",
+    "hit_points": 4,
+    "custom_hp": {
+        "checked": false,
+        "value": "2 (9hp)"
+    },
+    "morale": "7",
+    "name": "Monster",
+    "number_appearing": "1",
+    "round_speed": 120,
+    "saves": {
+        "breath": "B15",
+        "death": "D12",
+        "paralysis": "P14",
+        "saves_as": "1",
+        "spells": "S16",
+        "wands": "W13"
+    },
+    "speed": "40",
+    "thac0": 19,
+    "treasureType": "T",
+    "xP": "10"
+}
