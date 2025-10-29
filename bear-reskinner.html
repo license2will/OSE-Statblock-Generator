@@ -10,67 +10,44 @@
     </style>
 
     <link rel="shortcut icon" type="image/x-icon" href="dndimages/favicon.ico" />
-    <!-- <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"> -->
     <link rel="stylesheet" type="text/css" href="css/dnd-style.css">
     <link rel="stylesheet" type="text/css" href="css/statblock-style.css">
     <link rel="stylesheet" type="text/css" href="css/statblock-page-style.css">
     <link rel="stylesheet" type="text/css" href="css/libre-baskerville.css">
     <link rel="stylesheet" type="text/css" href="css/noto-sans.css">
     <script src="js/jquery-3.7.1.min.js"></script>
-    <!-- <script src="js/bootstrap.min.js"></script> -->
     <script src="js/FileSaver.min.js"></script>
     <script src="js/html-to-image.min.js"></script>
     <script src="js/statblock-script.js"></script>
     <script src="js/statblock-editeable.js"></script>
     <script src="js/statblock-export.js"></script>
 
-
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145234284-1"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-145234284-1');
-    </script>
+    <!-- Credit for source code of this app goes to Tetra-Cube's 5e Statblock Generator. -->
 
 </head>
 
 <body id="stat-block-body" style="min-width: 1000px;">
+
     <div class="container" style="text-align: center;">
-        <!-- KOFI HEADER -->
-        <!-- <div id="kofiheader" style="text-align: center;">
-            <br>
-            <script src='https://ko-fi.com/widgets/widget_2.js'></script>
-            <script>
-                try {
-                    kofiwidget2.init('Support Me on Ko-fi', '#46b798', 'Q5Q8MRF6');
-                    kofiwidget2.draw();
-                }
-                catch {
-                    console.error("Kofi widget display error")
-                    document.writeln('<a id="kofi-button" href="https://ko-fi.com/Q5Q8MRF6" target="_blank"><b>Support me on Ko-Fi!</b></a>');
-                }
-            </script>
-            <br>
-        </div> -->
         <div class="content">
-            <!-- <div style="text-align: center;"><a href="dnd-reference.html">PC Options Reference</a> - <a
-                    href="dnd-char-gen.html">Character Generator</a> - <a href="dnd-magic-items.html">Magic Item
-                    Generator</a> - <b>Statblock Generator</b></div> -->
             <br>
             <h1 id="testheader">The Bear Re-Skinner – OSE Statblock Generator</h1>
             <h2><a href="https://talesofthegrotesqueanddungeonesque.blogspot.com/2016/08/just-use-bears.html">Just Use Bears.</a></h2>
             <p>Based on <a href="https://tetra-cube.com/dnd/dnd-statblock.html">Tetra-Cube's 5e Statblock Generator</a></p>
+
             <br>
+
+            <!-- Buttons -->
             <button onclick="TrySaveFile()">Save Statblock</button>
             <button onclick="LoadFilePrompt()">Load Statblock</button>
             <button onclick="TryPrint()">Printable Block</button>
             <button onclick="TryImage()">View Image</button>
             <button onclick="TryMarkdown()">View Markdown</button>
             <input id="file-upload" type="file" onChange="TryLoadFile();" hidden />
+
             <br><br>
+
+            <!-- Monster Select Form -->
             <div id="monster-select-form">Monster Presets: <select id="monster-select">
                     <option value="">-Select-</option>
                     <option value="default">Restore Default</option>
@@ -387,23 +364,9 @@
                 
                 <hr>
 
-                <div>
-                    <label for="format-helper-checkbox">Show Formatting Help: <input type="checkbox"
-                            id="format-helper-checkbox" onclick="FormFunctions.ShowHideFormatHelper()"></label>
-                </div>
                 <div id="format-helper" style="text-align: left; padding: 0 2rem;">
                     <br>
-                    <div>Use _ to italicize and ** to bold. For Spellcasting lists, use > to reverse-indent.</div>
-                    <br>
-                    <div><b>[MON]</b>: Shows the monster's name.</div>
-                    <div><b>[CHA]</b>: Shows the monster's charisma modifier.</div>
-                    <div><b>[3D6]</b>: Computes 3d6.</div>
-                    <div><b>[STR ATK]</b>: Calculates the modifier to the monster's attack roll for a strength-based
-                        attack.</div>
-                    <div><b>[DEX 2D8]</b>: Calculates the damage roll for a dexterity-based attack with damage dice 2d8.
-                    </div>
-                    <div><b>[WIS SAVE]</b>: Calculates the save DC vs the monster's wisdom.</div>
-                    <div><b>[3D6 + 1], [STR ATK - 2], [WIS SAVE + 3]</b>: Adds a modifier to the given values.</div>
+                    <div>Format to _<em>italicize</em>_ and **<strong>bold</strong>**.</div>
                     <br>
                 </div>
                 <div style="text-align: left; min-height: 5rem;">
@@ -418,7 +381,8 @@
                 </div>
                 <br>
             </div>
-            <div class="footer"><a href="https://github.com/Tetra-cube/Tetra-cube.github.io">GitHub Repo</a></div>
+
+            <div class="footer"><a href="https://github.com/license2will/OSE-Statblock-Generator">GitHub Repo</a></div>
         </div>
     </div>
 </body>
