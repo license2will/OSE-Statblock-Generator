@@ -2,7 +2,7 @@ x. default load-outs
 x. aesthetics
 3. rewrite to be completely modular and ood
 x. custom hit dice!!!!
-5. clean up code
+x. clean up code
 
 
 
